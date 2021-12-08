@@ -7,7 +7,8 @@ group "default" {
         "nltk-base",
         "pytorch-base",
         "sklearn-base",
-        "tensorflow-base"
+        "tensorflow-base",
+        "nginx-base"
     ]
 }
 
@@ -20,7 +21,8 @@ group "release" {
         "nltk-base-release",
         "pytorch-base-release",
         "sklearn-base-release",
-        "tensorflow-base-release"
+        "tensorflow-base-release",
+        "nginx-base-release"
     ]
 }
 
@@ -37,51 +39,57 @@ variable "TAG" {
 }
 
 target "java" {
-    context = "docker/"
+    context = "server/"
     tags = [ "${REPO_PREFIX}java:${TAG}" ]
     target = "java"
 }
 
 target "slim-base" {
-    context = "docker/"
+    context = "server/"
     tags = [ "${REPO_PREFIX}slim-base:${TAG}" ]
     target = "slim-base"
 }
 
 target "python-dev-base" {
-    context = "docker/"
+    context = "server/"
     tags = [ "${REPO_PREFIX}python-dev-base:${TAG}" ]
     target = "python-dev-base"
 }
 
 target "server-base" {
-    context = "docker/"
+    context = "server/"
     tags = [ "${REPO_PREFIX}server-base:${TAG}" ]
     target = "server-base"
 }
 
 target "nltk-base" {
-    context = "docker/"
+    context = "server/"
     tags = [ "${REPO_PREFIX}nltk-base:${TAG}" ]
     target = "nltk-base"
 }
 
 target "pytorch-base" {
-    context = "docker/"
+    context = "server/"
     tags = [ "${REPO_PREFIX}pytorch-base:${TAG}" ]
     target = "pytorch-base"
 }
 
 target "sklearn-base" {
-    context = "docker/"
+    context = "server/"
     tags = [ "${REPO_PREFIX}sklearn-base:${TAG}" ]
     target = "sklearn-base"
 }
 
 target "tensorflow-base" {
-    context = "docker/"
+    context = "server/"
     tags = [ "${REPO_PREFIX}tensorflow-base:${TAG}" ]
     target = "tensorflow-base"
+}
+
+target "nginx-base" {
+    context = "web/"
+    tags = [ "${REPO_PREFIX}nginx-base:${TAG}" ]
+    target = "nginx-base"
 }
 
 target "java-release" {
@@ -138,4 +146,11 @@ target "tensorflow-base-release" {
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}tensorflow-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}tensorflow-base" ]
     platforms = [ "linux/amd64" ]
+}
+
+target "nginx-base-release" {
+    inherits = [ "nginx-base" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}nginx-base" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}nginx-base" ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
 }
