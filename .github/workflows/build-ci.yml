@@ -7,11 +7,15 @@ on:
     branches: [ main ]
   schedule:
     - cron:  '0 19 * * *'
-    
+
+# For maximum cache coherency, ensure only one outstanding build at any given time
 concurrency: release
 
 jobs:
   build:
+    # Forks don't need to run the scheduled cron
+    if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
+
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -36,3 +40,6 @@ jobs:
           targets: release
           pull: true
           push: ${{ github.event_name != 'pull_request' }}
+        env:
+          # Deephaven, and forks, can push to their own namespace
+          REPO_PREFIX: ghcr.io/${{ github.repository_owner }}/
