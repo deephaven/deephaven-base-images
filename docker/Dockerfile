@@ -5,8 +5,11 @@
 # Using buster to ensure python3.7 is available downstream for python
 
 FROM debian:buster-slim as java
-RUN --mount=type=bind,source=./01-java,target=./01-java ./01-java/install.sh
+
 ARG TARGETARCH
+ARG DEBIAN_FRONTEND="noninteractive"
+
+RUN --mount=type=bind,source=./01-java,target=./01-java ./01-java/install.sh
 ENV LANG='en_US.UTF-8' \
    LANGUAGE='en_US:en' \
    LC_ALL='en_US.UTF-8' \
