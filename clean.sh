@@ -12,4 +12,5 @@ docker rmi \
     ghcr.io/deephaven/nltk-base \
     ghcr.io/deephaven/pytorch-base \
     ghcr.io/deephaven/sklearn-base \
-    ghcr.io/deephaven/tensorflow-base
+    ghcr.io/deephaven/tensorflow-base \
+    ghcr.io/deephaven/nginx-base
