@@ -35,6 +35,14 @@ Used as the base image for [deephaven-core's](https://github.com/deephaven/deeph
 
 Produced for platforms amd64 and arm64.
 
+### nginx-base
+
+Based on `nginx:1.19`, installs requirements for webdav class 2 support.
+
+Used as the base image for [deephaven-core's](https://github.com/deephaven/deephaven-core) `ghcr.io/deephaven/web` image.
+
+Produced for platforms amd64 and arm64.
+
 ## Extra Images
 
 The following are extended base runtimes for [deephaven-core](https://github.com/deephaven/deephaven-core).
