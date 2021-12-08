@@ -2,7 +2,8 @@
 
 # -------------------------------------
 
-FROM nginx:1.19 as nginx-base
+# Basing off of the perl variant, as our follow-up install would otherwise install perl itself
+FROM nginx:1.19-perl as nginx-base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
