@@ -152,5 +152,5 @@ target "nginx-base-release" {
     inherits = [ "nginx-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}nginx-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}nginx-base" ]
-    platforms = [ "linux/amd64" ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
 }
