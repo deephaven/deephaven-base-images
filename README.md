@@ -2,7 +2,7 @@
 
 This repository is responsible for producing a set of images for use with [deephaven-core](https://github.com/deephaven/deephaven-core).
 
-## Main Images
+## Server images
 
 ### java
 
@@ -18,15 +18,6 @@ Used as the base image for [deephaven-core's](https://github.com/deephaven/deeph
 
 Produced for platforms amd64 and arm64.
 
-### python-dev-base
-
-Based on `slim-base`, installs python 3.7 runtime and development libraries.
-
-Used as the base image for building jpy for [deephaven-core](https://github.com/deephaven/deephaven-core).
-There are nice sympathies when building jpy on a system derived from the runtime image.
-
-Produced for platforms amd64 and arm64.
-
 ### server-base
 
 Based on `slim-base`, installs python 3.7 runtime libraries and Deephaven python requirements.
@@ -34,6 +25,8 @@ Based on `slim-base`, installs python 3.7 runtime libraries and Deephaven python
 Used as the base image for [deephaven-core's](https://github.com/deephaven/deephaven-core) `ghcr.io/deephaven/server` image.
 
 Produced for platforms amd64 and arm64.
+
+## Web images
 
 ### nginx-base
 
@@ -43,7 +36,24 @@ Used as the base image for [deephaven-core's](https://github.com/deephaven/deeph
 
 Produced for platforms amd64 and arm64.
 
-## Extra Images
+## Development images
+
+### python-dev-base
+
+Based on `slim-base`, installs python 3.7 runtime and development libraries.
+
+Used as the base image for building jpy for [deephaven-core](https://github.com/deephaven/deephaven-core).
+There are nice sympathies when building jpy on a system derived from the runtime image.
+
+Produced for platforms amd64 and arm64.
+
+### protoc-base
+
+Based on `node:14-buster-slim`, installs support for JS, python, and java protoc generation.
+
+Produced (only) for platform amd64.
+
+## Extra server images
 
 The following are extended base runtimes for [deephaven-core](https://github.com/deephaven/deephaven-core).
 
@@ -53,7 +63,7 @@ Based on `server-base`, installs the [Natural Language Toolkit](https://github.c
 
 Used as the base image for [deephaven-core's](https://github.com/deephaven/deephaven-core) `ghcr.io/deephaven/server-nltk` image.
 
-Produced for platforms amd64.
+Produced (only) for platform amd64.
 
 ### pytorch-base
 
@@ -61,7 +71,7 @@ Based on `server-base`, installs [PyTorch](https://github.com/pytorch/pytorch) r
 
 Used as the base image for [deephaven-core's](https://github.com/deephaven/deephaven-core) `ghcr.io/deephaven/server-pytorch` image.
 
-Produced for platforms amd64.
+Produced (only) for platform amd64.
 
 ### sklearn-base
 
@@ -69,7 +79,7 @@ Based on `server-base`, installs [scikit-learn](https://github.com/scikit-learn/
 
 Used as the base image for [deephaven-core's](https://github.com/deephaven/deephaven-core) `ghcr.io/deephaven/server-sklearn` image.
 
-Produced for platforms amd64.
+Produced (only) for platform amd64.
 
 ### tensorflow-base
 
@@ -77,7 +87,7 @@ Based on `server-base`, installs [Tensorflow](https://github.com/tensorflow/tens
 
 Used as the base image for [deephaven-core's](https://github.com/deephaven/deephaven-core) `ghcr.io/deephaven/server-tensorflow` image.
 
-Produced for platforms amd64.
+Produced (only) for platform amd64.
 
 ## Build
 

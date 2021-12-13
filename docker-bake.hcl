@@ -8,7 +8,8 @@ group "default" {
         "pytorch-base",
         "sklearn-base",
         "tensorflow-base",
-        "nginx-base"
+        "nginx-base",
+        "protoc-base",
     ]
 }
 
@@ -22,7 +23,8 @@ group "release" {
         "pytorch-base-release",
         "sklearn-base-release",
         "tensorflow-base-release",
-        "nginx-base-release"
+        "nginx-base-release",
+        "protoc-base-release",
     ]
 }
 
@@ -92,6 +94,12 @@ target "nginx-base" {
     target = "nginx-base"
 }
 
+target "protoc-base" {
+    context = "proto/"
+    tags = [ "${REPO_PREFIX}protoc-base:${TAG}" ]
+    target = "protoc-base"
+}
+
 target "java-release" {
     inherits = [ "java" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}java" ]
@@ -153,4 +161,11 @@ target "nginx-base-release" {
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}nginx-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}nginx-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
+}
+
+target "protoc-base-release" {
+    inherits = [ "protoc-base" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}protoc-base" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}protoc-base" ]
+    platforms = [ "linux/amd64" ]
 }
