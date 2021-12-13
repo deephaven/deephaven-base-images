@@ -26,7 +26,7 @@ Used as the base image for [deephaven-core's](https://github.com/deephaven/deeph
 
 Produced for platforms amd64 and arm64.
 
-### Web images
+## Web images
 
 ### nginx-base
 
