@@ -3,3 +3,8 @@ dill>=0.2.8
 wrapt
 pandas
 numba
+
+# importlib-metadata is needed for plugin entrypoints
+# importlib-metadata introduced a select method in 3.6 that the server uses
+# For python version at least 3.8, this functionality is built-in.
+importlib-metadata>=3.6; python_version < '3.8'
