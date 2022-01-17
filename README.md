@@ -21,6 +21,7 @@ Produced for platforms amd64 and arm64.
 ### server-base
 
 Based on `slim-base`, installs python 3.7 runtime libraries and Deephaven python requirements.
+Sets up and defaults to the virtual environment `/opt/deephaven-venv`.
 
 Used as the base image for [deephaven-core's](https://github.com/deephaven/deephaven-core) `ghcr.io/deephaven/server` image.
 
@@ -41,6 +42,7 @@ Produced for platforms amd64 and arm64.
 ### python-dev-base
 
 Based on `slim-base`, installs python 3.7 runtime and development libraries.
+Sets up and defaults to the virtual environment `/opt/build-venv`.
 
 Used as the base image for building jpy for [deephaven-core](https://github.com/deephaven/deephaven-core).
 There are nice sympathies when building jpy on a system derived from the runtime image.
