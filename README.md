@@ -63,7 +63,7 @@ Based on `server-base`, installs the [Natural Language Toolkit](https://github.c
 
 Used as the base image for [deephaven-core's](https://github.com/deephaven/deephaven-core) `ghcr.io/deephaven/server-nltk` image.
 
-Produced (only) for platform amd64.
+Produced for platforms amd64 and arm64.
 
 ### pytorch-base
 
@@ -71,7 +71,7 @@ Based on `server-base`, installs [PyTorch](https://github.com/pytorch/pytorch) r
 
 Used as the base image for [deephaven-core's](https://github.com/deephaven/deephaven-core) `ghcr.io/deephaven/server-pytorch` image.
 
-Produced (only) for platform amd64.
+Produced for platforms amd64 and arm64.
 
 ### sklearn-base
 
@@ -79,7 +79,7 @@ Based on `server-base`, installs [scikit-learn](https://github.com/scikit-learn/
 
 Used as the base image for [deephaven-core's](https://github.com/deephaven/deephaven-core) `ghcr.io/deephaven/server-sklearn` image.
 
-Produced (only) for platform amd64.
+Produced for platforms amd64 and arm64.
 
 ### tensorflow-base
 

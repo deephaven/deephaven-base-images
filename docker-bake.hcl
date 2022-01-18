@@ -132,21 +132,21 @@ target "nltk-base-release" {
     inherits = [ "nltk-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}nltk-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}nltk-base" ]
-    platforms = [ "linux/amd64" ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
 target "pytorch-base-release" {
     inherits = [ "pytorch-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}pytorch-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}pytorch-base" ]
-    platforms = [ "linux/amd64" ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
 target "sklearn-base-release" {
     inherits = [ "sklearn-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}sklearn-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}sklearn-base" ]
-    platforms = [ "linux/amd64" ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
 target "tensorflow-base-release" {
