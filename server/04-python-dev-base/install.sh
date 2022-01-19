@@ -17,9 +17,10 @@ rm -rf /var/lib/apt/lists/*
 dpkg --list
 
 python3 -m venv /opt/build-venv
+source /opt/build-venv/bin/activate
 
 # Upgrade pip and setuptools standalone.
 # Can replace with venv module option `--upgrade-deps` if newer python3-venv becomes available.
-/opt/build-venv/bin/python -m pip install -q --no-cache-dir --upgrade pip setuptools
-/opt/build-venv/bin/python -m pip install -q --no-cache-dir --upgrade wheel
-/opt/build-venv/bin/python -m pip list
+python -m pip install -q --no-cache-dir --upgrade pip setuptools
+python -m pip install -q --no-cache-dir --upgrade wheel
+python -m pip list
