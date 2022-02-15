@@ -8,6 +8,7 @@ group "default" {
         "pytorch-base",
         "sklearn-base",
         "tensorflow-base",
+        "all-ai-base",
         "nginx-base",
         "protoc-base",
     ]
@@ -23,6 +24,7 @@ group "release" {
         "pytorch-base-release",
         "sklearn-base-release",
         "tensorflow-base-release",
+        "all-ai-base-release",
         "nginx-base-release",
         "protoc-base-release",
     ]
@@ -86,6 +88,12 @@ target "tensorflow-base" {
     context = "server/"
     tags = [ "${REPO_PREFIX}tensorflow-base:${TAG}" ]
     target = "tensorflow-base"
+}
+
+target "all-ai-base" {
+    context = "server/"
+    tags = [ "${REPO_PREFIX}all-ai-base:${TAG}" ]
+    target = "all-ai-base"
 }
 
 target "nginx-base" {
@@ -153,6 +161,13 @@ target "tensorflow-base-release" {
     inherits = [ "tensorflow-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}tensorflow-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}tensorflow-base" ]
+    platforms = [ "linux/amd64" ]
+}
+
+target "all-ai-base-release" {
+    inherits = [ "all-ai-base" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}all-ai-base" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}all-ai-base" ]
     platforms = [ "linux/amd64" ]
 }
 

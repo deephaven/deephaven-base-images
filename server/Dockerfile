@@ -51,4 +51,7 @@ RUN --mount=type=bind,source=./05-sklearn-base,target=./05-sklearn-base ./05-skl
 FROM server-base as tensorflow-base
 RUN --mount=type=bind,source=./05-tensorflow-base,target=./05-tensorflow-base ./05-tensorflow-base/install.sh
 
+FROM server-base as all-ai-base
+RUN --mount=type=bind,source=./05-all-ai-base,target=./05-all-ai-base ./05-all-ai-base/install.sh
+
 # -------------------------------------

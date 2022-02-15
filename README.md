@@ -91,6 +91,14 @@ Used as the base image for [deephaven-core's](https://github.com/deephaven/deeph
 
 Produced (only) for platform amd64.
 
+### all-ai-base
+
+Based on `server-base`, installs [Natural Language Toolkit](https://github.com/nltk/nltk), [PyTorch](https://github.com/pytorch/pytorch), [scikit-learn](https://github.com/scikit-learn/scikit-learn), and [Tensorflow](https://github.com/tensorflow/tensorflow) requirements.
+
+Used as the base image for [deephaven-core's](https://github.com/deephaven/deephaven-core) `ghcr.io/deephaven/server-all-ai` image.
+
+Produced (only) for platform amd64.
+
 ## Build
 
 For a default, local-only build on your system's platform, run:
