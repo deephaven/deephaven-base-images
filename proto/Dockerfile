@@ -2,7 +2,7 @@
 
 # -------------------------------------
 
-FROM node:14-buster-slim as protoc-base
+FROM node:16-buster-slim as protoc-base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
