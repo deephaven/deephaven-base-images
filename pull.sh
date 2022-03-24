@@ -13,3 +13,5 @@ docker pull ghcr.io/deephaven/pytorch-base
 docker pull ghcr.io/deephaven/sklearn-base
 docker pull ghcr.io/deephaven/tensorflow-base
 docker pull ghcr.io/deephaven/nginx-base
+docker pull ghcr.io/deephaven/nginx-noroot-base
+docker pull ghcr.io/deephaven/all-ai-base

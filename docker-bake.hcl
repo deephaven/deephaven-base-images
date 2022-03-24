@@ -10,6 +10,7 @@ group "default" {
         "tensorflow-base",
         "all-ai-base",
         "nginx-base",
+        "nginx-noroot-base",
         "protoc-base",
     ]
 }
@@ -26,6 +27,7 @@ group "release" {
         "tensorflow-base-release",
         "all-ai-base-release",
         "nginx-base-release",
+        "nginx-noroot-base-release",
         "protoc-base-release",
     ]
 }
@@ -102,6 +104,12 @@ target "nginx-base" {
     target = "nginx-base"
 }
 
+target "nginx-noroot-base" {
+    context = "web/"
+    tags = [ "${REPO_PREFIX}nginx-noroot-base:${TAG}" ]
+    target = "nginx-noroot-base"
+}
+
 target "protoc-base" {
     context = "proto/"
     tags = [ "${REPO_PREFIX}protoc-base:${TAG}" ]
@@ -175,6 +183,13 @@ target "nginx-base-release" {
     inherits = [ "nginx-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}nginx-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}nginx-base" ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
+}
+
+target "nginx-noroot-base-release" {
+    inherits = [ "nginx-noroot-base" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}nginx-noroot-base" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}nginx-noroot-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
