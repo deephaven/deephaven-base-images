@@ -1,6 +1,4 @@
 numpy
-dill>=0.2.8
-wrapt
 pandas
 numba
 deephaven-plugin
