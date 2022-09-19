@@ -27,11 +27,6 @@ RUN --mount=type=bind,source=./03-python-base,target=./03-python-base ./03-pytho
 
 # -------------------------------------
 
-FROM python-base-internal as python-dev-base
-RUN --mount=type=bind,source=./04-python-dev-base,target=./04-python-dev-base ./04-python-dev-base/install.sh
-ENV VIRTUAL_ENV='/opt/build-venv' \
-   PATH="/opt/build-venv/bin:${PATH}"
-
 FROM python-base-internal as server-base
 RUN --mount=type=bind,source=./04-server-base,target=./04-server-base ./04-server-base/install.sh
 ENV VIRTUAL_ENV='/opt/deephaven-venv' \

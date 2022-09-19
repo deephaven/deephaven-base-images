@@ -1,12 +1,32 @@
 group "default" {
     targets = [
-        "server-base"
+        "java",
+        "slim-base",
+        "server-base",
+        "nltk-base",
+        "pytorch-base",
+        "sklearn-base",
+        "tensorflow-base",
+        "all-ai-base",
+        "nginx-base",
+        "nginx-noroot-base",
+        "protoc-base",
     ]
 }
 
 group "release" {
     targets = [
-        "server-base-release"
+        "java-release",
+        "slim-base-release",
+        "server-base-release",
+        "nltk-base-release",
+        "pytorch-base-release",
+        "sklearn-base-release",
+        "tensorflow-base-release",
+        "all-ai-base-release",
+        "nginx-base-release",
+        "nginx-noroot-base-release",
+        "protoc-base-release",
     ]
 }
 
@@ -32,12 +52,6 @@ target "slim-base" {
     context = "server/"
     tags = [ "${REPO_PREFIX}slim-base:${TAG}" ]
     target = "slim-base"
-}
-
-target "python-dev-base" {
-    context = "server/"
-    tags = [ "${REPO_PREFIX}python-dev-base:${TAG}" ]
-    target = "python-dev-base"
 }
 
 target "server-base" {
@@ -105,13 +119,6 @@ target "slim-base-release" {
     inherits = [ "slim-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}slim-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}slim-base" ]
-    platforms = [ "linux/amd64", "linux/arm64" ]
-}
-
-target "python-dev-base-release" {
-    inherits = [ "python-dev-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}python-dev-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}python-dev-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
