@@ -35,7 +35,7 @@ variable "REPO_PREFIX" {
 }
 
 variable "CACHE_PREFIX" {
-    default = "deephaven-base-images-"
+    default = "deephaven-base-images-2-"
 }
 
 variable "TAG" {
