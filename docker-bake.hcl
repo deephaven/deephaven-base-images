@@ -2,7 +2,6 @@ group "default" {
     targets = [
         "java",
         "slim-base",
-        "python-dev-base",
         "server-base",
         "nltk-base",
         "pytorch-base",
@@ -19,7 +18,6 @@ group "release" {
     targets = [
         "java-release",
         "slim-base-release",
-        "python-dev-base-release",
         "server-base-release",
         "nltk-base-release",
         "pytorch-base-release",
@@ -37,7 +35,7 @@ variable "REPO_PREFIX" {
 }
 
 variable "CACHE_PREFIX" {
-    default = "deephaven-base-images-"
+    default = "deephaven-base-images-2-"
 }
 
 variable "TAG" {
@@ -54,12 +52,6 @@ target "slim-base" {
     context = "server/"
     tags = [ "${REPO_PREFIX}slim-base:${TAG}" ]
     target = "slim-base"
-}
-
-target "python-dev-base" {
-    context = "server/"
-    tags = [ "${REPO_PREFIX}python-dev-base:${TAG}" ]
-    target = "python-dev-base"
 }
 
 target "server-base" {
@@ -127,13 +119,6 @@ target "slim-base-release" {
     inherits = [ "slim-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}slim-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}slim-base" ]
-    platforms = [ "linux/amd64", "linux/arm64" ]
-}
-
-target "python-dev-base-release" {
-    inherits = [ "python-dev-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}python-dev-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}python-dev-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
