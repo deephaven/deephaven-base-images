@@ -1,5 +1,5 @@
 numpy
 pandas
 numba
-deephaven-plugin
+deephaven-plugin>=0.3.0.dev0
 jpy==0.11.0
