@@ -1,6 +1,6 @@
 numpy
 pandas
 numba
-deephaven-plugin
+deephaven-plugin>=0.3.0
 jpy==0.12.0
 java-utilities
