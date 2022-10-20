@@ -102,7 +102,7 @@ else
           GENERATE_ENV=yes
           ;;
       *)
-          echo "$0: unrecognized option: $step"
+          echo "$0: unrecognized option: $step" 1>&2
           exit 1
           ;;
   esac
