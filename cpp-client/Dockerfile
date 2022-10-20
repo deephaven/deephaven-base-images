@@ -26,9 +26,41 @@ RUN set -eux; \
 #
 # Download and build dependent libraries.
 #
+# Be mindful about the order below:
+# 1. Some libraries have cross dependencies (eg, arrow depends on grpc).
+# 2. If something fails, the docker cache at that point gets invalidated;
+#    so it makes sense to put more brittle stuff later on.
+#
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; \
-    mkdir -p /cpp-client/deps; \
-    cd /cpp-client/deps; \
-    /build-dependencies.sh; \
-    rm -rf /cpp-client/deps/src
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
+    bash -c "/build-dependencies.sh --clean protobuf"
+RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
+    bash -c "/build-dependencies.sh --clean re2"
+RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
+    bash -c "/build-dependencies.sh --clean protobuf"
+RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
+    bash -c "/build-dependencies.sh --clean gflags"
+RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
+    bash -c "/build-dependencies.sh --clean absl"
+RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
+    bash -c "/build-dependencies.sh --clean cares"
+RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
+    bash -c "/build-dependencies.sh --clean zlib"
+RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
+    bash -c "/build-dependencies.sh --clean grpc"
+RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
+    bash -c "/build-dependencies.sh --clean immer"
+RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
+    bash -c "/build-dependencies.sh --clean arrow"
+RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
+    bash -c "/build-dependencies.sh env"
