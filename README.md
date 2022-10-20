@@ -55,6 +55,12 @@ Based on `node:14-buster-slim`, installs support for JS, python, and java protoc
 
 Produced (only) for platform amd64.
 
+### cpp-client-base
+
+Based on `ubuntu:22.04`, installs libraries needed to build the Deephaven cpp client.
+
+Produced (only) for platform amd64.
+
 ## Extra server images
 
 The following are extended base runtimes for [deephaven-core](https://github.com/deephaven/deephaven-core).

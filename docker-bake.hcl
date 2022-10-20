@@ -11,6 +11,7 @@ group "default" {
         "nginx-base",
         "nginx-noroot-base",
         "protoc-base",
+        "cpp-client-base",
     ]
 }
 
@@ -27,6 +28,7 @@ group "release" {
         "nginx-base-release",
         "nginx-noroot-base-release",
         "protoc-base-release",
+        "cpp-client-base-release",
     ]
 }
 
@@ -108,6 +110,11 @@ target "protoc-base" {
     target = "protoc-base"
 }
 
+target "cpp-client-base" {
+    context = "cpp-client/"
+    tags = [ "${REPO_PREFIX}cpp-client-base:${TAG}" ]
+}
+
 target "java-release" {
     inherits = [ "java" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}java" ]
@@ -182,5 +189,12 @@ target "protoc-base-release" {
     inherits = [ "protoc-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}protoc-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}protoc-base" ]
+    platforms = [ "linux/amd64" ]
+}
+
+target "cpp-client-base-release" {
+    inherits = [ "cpp-client-base" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}cpp-client-base" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}cpp-client-base" ]
     platforms = [ "linux/amd64" ]
 }
