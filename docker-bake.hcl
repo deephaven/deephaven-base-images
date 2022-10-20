@@ -196,5 +196,5 @@ target "cpp-client-base-release" {
     inherits = [ "cpp-client-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}cpp-client-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}cpp-client-base" ]
-    platforms = [ "linux/amd64", "linux/arm64" ]
+    platforms = [ "linux/amd64" ]
 }
