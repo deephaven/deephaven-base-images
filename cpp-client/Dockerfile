@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 
-FROM ubuntu:22.04
+FROM ubuntu:22.04 AS osbase
 ARG DEBIAN_FRONTEND="noninteractive"
 
 #
@@ -32,35 +32,32 @@ RUN set -eux; \
 #    so it makes sense to put more brittle stuff later on.
 #
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
-    bash -c "/build-dependencies.sh --clean protobuf"
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
+    /build-dependencies.sh --clean protobuf
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
-    bash -c "/build-dependencies.sh --clean re2"
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
+    /build-dependencies.sh --clean re2
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
-    bash -c "/build-dependencies.sh --clean protobuf"
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
+    /build-dependencies.sh --clean gflags
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
-    bash -c "/build-dependencies.sh --clean gflags"
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
+    /build-dependencies.sh --clean absl
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
-    bash -c "/build-dependencies.sh --clean absl"
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
+    /build-dependencies.sh --clean cares
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
-    bash -c "/build-dependencies.sh --clean cares"
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
+    /build-dependencies.sh --clean zlib
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
-    bash -c "/build-dependencies.sh --clean zlib"
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
+    /build-dependencies.sh --clean grpc
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
-    bash -c "/build-dependencies.sh --clean grpc"
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
+    /build-dependencies.sh --clean immer
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
-    bash -c "/build-dependencies.sh --clean immer"
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
+    /build-dependencies.sh --clean arrow
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
-    bash -c "/build-dependencies.sh --clean arrow"
-RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client-deps; \
-    bash -c "/build-dependencies.sh env"
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
+    /build-dependencies.sh env
