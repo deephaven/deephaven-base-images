@@ -229,7 +229,7 @@ if [ "$BUILD_ABSL" = "yes" ]; then
   make -j$NCPUS
   make install
   if [ "$clean" = "yes" ]; then
-    rm -fr "$SRC/abseil"
+    rm -fr "$SRC/abseil-cpp"
   fi
   echo "*** abseil DONE"
 fi
