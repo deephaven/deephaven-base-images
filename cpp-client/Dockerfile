@@ -2,6 +2,7 @@
 
 FROM ubuntu:22.04
 ARG DEBIAN_FRONTEND="noninteractive"
+ARG BUILD_TYPE=Release
 
 #
 # Install system dependencies (eg, build tools) for build.
@@ -28,4 +29,4 @@ RUN set -eux; \
 #
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
     set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
-    /build-dependencies.sh --clean
+    BUILD_TYPE="${BUILD_TYPE}" /build-dependencies.sh --clean
