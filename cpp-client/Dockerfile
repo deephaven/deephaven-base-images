@@ -27,8 +27,5 @@ RUN set -eux; \
 # Download and build dependent libraries.
 #
 RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh \
-    set -eux; \
-    mkdir -p /cpp-client/deps; \
-    cd /cpp-client/deps; \
-    /build-dependencies.sh; \
-    rm -rf /cpp-client/deps/src
+    set -eux; mkdir -p /cpp-client/deps; cd /cpp-client/deps; \
+    /build-dependencies.sh --clean
