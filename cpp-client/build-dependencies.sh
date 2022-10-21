@@ -193,6 +193,7 @@ if [ "$BUILD_RE2" = "yes" ]; then
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/re2"
   fi
+  echo "*** re2 DONE"
 fi
 
 ### gflags
@@ -308,7 +309,7 @@ if [ "$BUILD_GRPC" = "yes" ]; then
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/grpc"
   fi
-  echo "grpc DONE"
+  echo "*** grpc DONE"
 fi
 
 ### arrow
@@ -351,7 +352,7 @@ EOF
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/arrow"
   fi
-  echo "DONE"
+  echo "*** arrow DONE"
 fi
 
 ### immer
@@ -370,7 +371,7 @@ if [ "$BUILD_IMMER" = "yes" ]; then
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/immer"
   fi
-  echo "DONE"
+  echo "*** immer DONE"
 fi
 
 echo DONE.
