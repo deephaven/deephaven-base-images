@@ -381,7 +381,8 @@ if [ "$GENERATE_ENV" = "yes" ]; then
   echo -n "Creating env.sh..."
   cd $DHDEPS_HOME
   (echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH"
-   echo "export NCPUS=$NCPUS") > env.sh
+#  Ensure this is evaluated not now, but when the generated code is read.
+   echo 'export NCPUS=`getconf _NPROCESSORS_ONLN`') > env.sh
   echo DONE.
 fi
 
