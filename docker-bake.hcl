@@ -44,6 +44,16 @@ variable "TAG" {
     default = "latest"
 }
 
+# User for cpp-client, passed to cmake as build type.
+# Typically 'Debug' or 'Release'
+# 'Debug' may be conveniennt in some manual/development
+# settings, but is considerably more expensive in terms
+# of space and also somewhat more expensive in build time.
+# So we default to 'Release'.
+variable "BUILD_TYPE" {
+    default = "Release"
+}
+
 target "java" {
     context = "server/"
     tags = [ "${REPO_PREFIX}java:${TAG}" ]
@@ -113,6 +123,9 @@ target "protoc-base" {
 target "cpp-client-base" {
     context = "cpp-client/"
     tags = [ "${REPO_PREFIX}cpp-client-base:${TAG}" ]
+    args = {
+        "BUILD_TYPE" = "${BUILD_TYPE}"
+    }
 }
 
 target "java-release" {
