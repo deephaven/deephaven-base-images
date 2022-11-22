@@ -13,7 +13,7 @@ RUN set -eux; \
 
 # -------------------------------------
 
-FROM node:14-buster-slim as protoc-base
+FROM node:14 as protoc-base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
