@@ -4,4 +4,4 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-docker buildx bake
+docker buildx bake "$@"
