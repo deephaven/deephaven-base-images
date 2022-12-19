@@ -1,6 +1,7 @@
 numpy
 pandas
 numba
+pyarrow<11
 deephaven-plugin>=0.3.0
 jedi==0.18.2
 jpy==0.13.0
