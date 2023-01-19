@@ -4,6 +4,8 @@ This repository is responsible for producing a set of images for use with [deeph
 
 ## Server images
 
+Note: some of this documentation may be out of date. The server-specific `-base` image building process has moved to [deephaven-server-docker](https://github.com/deephaven/deephaven-server-docker).
+
 ### java
 
 Based on `debian:buster-slim`, installs OpenJDK 11.

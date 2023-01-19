@@ -1,13 +1,6 @@
 group "default" {
     targets = [
         "java",
-        "slim-base",
-        "server-base",
-        "nltk-base",
-        "pytorch-base",
-        "sklearn-base",
-        "tensorflow-base",
-        "all-ai-base",
         "nginx-base",
         "nginx-noroot-base",
         "protoc-base",
@@ -18,13 +11,6 @@ group "default" {
 group "release" {
     targets = [
         "java-release",
-        "slim-base-release",
-        "server-base-release",
-        "nltk-base-release",
-        "pytorch-base-release",
-        "sklearn-base-release",
-        "tensorflow-base-release",
-        "all-ai-base-release",
         "nginx-base-release",
         "nginx-noroot-base-release",
         "protoc-base-release",
