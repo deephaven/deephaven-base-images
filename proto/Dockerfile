@@ -20,4 +20,4 @@ ARG DEBIAN_FRONTEND="noninteractive"
 RUN --mount=type=bind,source=./01-protoc-base,target=./01-protoc-base ./01-protoc-base/install.sh
 COPY --link --from=go-build /go/bin/protoc-gen-go-grpc /opt/protoc-gen-go-grpc
 COPY --link --from=go-build /go/bin/protoc-gen-go /opt/protoc-gen-go
-COPY --link --from=cpp-client-base ./cpp-client/deps/local/grpc/bin /opt/cpp
+COPY --link --from=cpp-client-base ./cpp-client/deps/local/grpc/bin/grpc_cpp_plugin /opt/cpp/grpc_cpp_plugin
