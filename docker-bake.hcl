@@ -102,6 +102,9 @@ target "nginx-noroot-base" {
 
 target "protoc-base" {
     context = "proto/"
+    contexts = {
+        cpp-client-base = "target:cpp-client-base"
+    }
     tags = [ "${REPO_PREFIX}protoc-base:${TAG}" ]
     target = "protoc-base"
 }
