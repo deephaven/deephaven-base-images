@@ -13,7 +13,7 @@ RUN set -eux; \
 
 # -------------------------------------
 
-FROM node:14 as protoc-base
+FROM node:18-bullseye as protoc-base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 

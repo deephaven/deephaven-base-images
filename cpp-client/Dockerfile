@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 
-FROM ubuntu:22.04
+FROM debian:bullseye
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG BUILD_TYPE=Release
 
