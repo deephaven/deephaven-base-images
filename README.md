@@ -53,13 +53,13 @@ Produced for platforms amd64 and arm64.
 
 ### protoc-base
 
-Based on `node:14-buster-slim`, installs support for JS, python, and java protoc generation.
+Based on `node:18-bullseye`, installs support for JS, python, and java protoc generation.
 
 Produced (only) for platform amd64.
 
 ### cpp-client-base
 
-Based on `ubuntu:22.04`, installs libraries needed to build the Deephaven cpp client.
+Based on `debian:bullseye`, installs libraries needed to build the Deephaven cpp client.
 
 Produced (only) for platform amd64.
 
