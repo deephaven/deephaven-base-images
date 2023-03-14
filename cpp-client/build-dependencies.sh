@@ -11,9 +11,11 @@
 # Fail on first error; echo each command before executing.
 set -eux
 
-if [ "$#" -ge 1 -a "$1" == "--clean" ]; then
-    clean="yes"
-    shift
+if [ "$#" -ge 1 ]; then
+    if [ "$1" == "--clean" ]; then
+        clean="yes"
+        shift
+    fi
 else
     clean="no"
 fi
