@@ -18,9 +18,9 @@ apt-get -qq -y --no-install-recommends install \
 rm -rf /var/lib/apt/lists/*
 dpkg --list
 
-python3 -m pip install -q --no-cache-dir --upgrade pip
-python3 -m pip install -q --no-cache-dir --upgrade setuptools
-python3 -m pip install -q --no-cache-dir -r "${__dir}/requirements.txt"
+python3 -m pip install --break-system-packages -q --no-cache-dir --upgrade pip
+python3 -m pip install --break-system-packages -q --no-cache-dir --upgrade setuptools
+python3 -m pip install --break-system-packages -q --no-cache-dir -r "${__dir}/requirements.txt"
 python3 -m pip list
 
 # Note: should not update past 3.20.x until https://github.com/protocolbuffers/protobuf-javascript/issues/127 is fixed
