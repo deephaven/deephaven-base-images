@@ -16,7 +16,7 @@ jobs:
     # Forks don't need to run the scheduled cron
     if: ${{ github.repository_owner == 'deephaven' || github.event_name != 'schedule' }}
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04-4-16
     steps:
       - name: Checkout
         uses: actions/checkout@v3
