@@ -174,5 +174,5 @@ target "protoc-base-release" {
 
 target "cpp-client-base-release" {
     inherits = [ "cpp-client-base" ]
-    platforms = [ "linux/amd64", "linux/arm64" ]
+    platforms = [ "linux/amd64" ]
 }
