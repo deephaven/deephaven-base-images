@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 
-FROM debian:bullseye
+FROM debian:bullseye-20230612-slim
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG BUILD_TYPE=Release
 
