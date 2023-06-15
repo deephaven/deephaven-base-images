@@ -119,84 +119,60 @@ target "cpp-client-base" {
 
 target "java-release" {
     inherits = [ "java" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}java" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}java" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
 target "slim-base-release" {
     inherits = [ "slim-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}slim-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}slim-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
 target "server-base-release" {
     inherits = [ "server-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}server-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}server-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
 target "nltk-base-release" {
     inherits = [ "nltk-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}nltk-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}nltk-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
 target "pytorch-base-release" {
     inherits = [ "pytorch-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}pytorch-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}pytorch-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
 target "sklearn-base-release" {
     inherits = [ "sklearn-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}sklearn-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}sklearn-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
 target "tensorflow-base-release" {
     inherits = [ "tensorflow-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}tensorflow-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}tensorflow-base" ]
     platforms = [ "linux/amd64" ]
 }
 
 target "all-ai-base-release" {
     inherits = [ "all-ai-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}all-ai-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}all-ai-base" ]
     platforms = [ "linux/amd64" ]
 }
 
 target "nginx-base-release" {
     inherits = [ "nginx-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}nginx-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}nginx-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
 target "nginx-noroot-base-release" {
     inherits = [ "nginx-noroot-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}nginx-noroot-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}nginx-noroot-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
 
 target "protoc-base-release" {
     inherits = [ "protoc-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}protoc-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}protoc-base" ]
     platforms = [ "linux/amd64" ]
 }
 
 target "cpp-client-base-release" {
     inherits = [ "cpp-client-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}cpp-client-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}cpp-client-base" ]
     platforms = [ "linux/amd64", "linux/arm64" ]
 }
