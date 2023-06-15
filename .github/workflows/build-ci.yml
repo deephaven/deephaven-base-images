@@ -8,9 +8,6 @@ on:
   schedule:
     - cron:  '0 19 * * *'
 
-# For maximum cache coherency, ensure only one outstanding build at any given time
-concurrency: release
-
 jobs:
   build:
     # Forks don't need to run the scheduled cron
