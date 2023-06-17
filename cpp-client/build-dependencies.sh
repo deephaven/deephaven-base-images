@@ -458,6 +458,7 @@ if [ "$BUILD_CARES" = "yes" ]; then
         -DCMAKE_INSTALL_PREFIX=${PFX}/cares \
         -DCARES_SHARED=OFF \
         -DCARES_STATIC=ON \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
         ..
   make -j$NCPUS
   make install
