@@ -16,7 +16,11 @@ function usage {
     echo "   where action is one of"
     echo "     * 'clone' or 'build' followed by '-' and a dependent library name,"
     echo "        one of {protobuf|re2|gflags|absl|flatbuffers|cares|zlib|grpc|arrow|immer|boost}"
-    echo "        eg, 'clone-protobuf'"
+    echo "        wich imples cloning or building the respective library;"
+    echo "        eg, 'clone-protobuf' will clone protobuf."
+    echo "     *  one of {protobuf|re2|gflags|absl|flatbuffers|cares|zlib|grpc|arrow|immer|boost}"
+    echo "        with no 'clone-' or 'build-' prefix, which implies do both clone and build for the"
+    echo "        respective library."
     echo "     *  'env'"
     echo 
     echo "  If no actions are requested, this results in performing all default actions."
@@ -53,6 +57,10 @@ function usage {
     echo "  env.sh that contains the cmake variable definitions needed to use"
     echo "  the dependent libraries from the locations they are being built"
     echo "  by this script."
+    echo
+    echo "  Note that flatbuffers is special, is not normally required,"
+    echo "  and when updating it it requires additional manual steps."
+    echo "  See comments in this script for details about updating flatbuffers."
     echo
     echo "  Examples:"
     echo "    * to clone and build all dependencies, do not set any"
@@ -132,11 +140,21 @@ else
                 BUILD_PROTOBUF=yes
                 shift
                 ;;
+            protobuf)
+                CLONE_PROTOBUF=yes
+                BUILD_PROTOBUF=yes
+                shift
+                ;;
             clone-re2)
                 CLONE_RE2=yes
                 shift
                 ;;
             build-re2)
+                BUILD_RE2=yes
+                shift
+                ;;
+            re2)
+                CLONE_RE2=yes
                 BUILD_RE2=yes
                 shift
                 ;;
@@ -148,11 +166,21 @@ else
                 BUILD_GFLAGS=yes
                 shift
                 ;;
+            gflags)
+                CLONE_GFLAGS=yes
+                BUILD_GFLAGS=yes
+                shift
+                ;;
             clone-absl)
                 CLONE_ABSL=yes
                 shift
                 ;;
             build-absl)
+                BUILD_ABSL=yes
+                shift
+                ;;
+            absl)
+                CLONE_ABSL=yes
                 BUILD_ABSL=yes
                 shift
                 ;;
@@ -164,11 +192,21 @@ else
                 BUILD_FLATBUFFERS=yes
                 shift
                 ;;
+            flatbuffers)
+                CLONE_FLATBUFFERS=yes
+                BUILD_FLATBUFFERS=yes
+                shift
+                ;;
             clone-cares)
                 CLONE_CARES=yes
                 shift
                 ;;
             build-cares)
+                BUILD_CARES=yes
+                shift
+                ;;
+            cares)
+                CLONE_CARES=yes
                 BUILD_CARES=yes
                 shift
                 ;;
@@ -180,11 +218,21 @@ else
                 BUILD_ZLIB=yes
                 shift
                 ;;
+            zlib)
+                CLONE_ZLIB=yes
+                BUILD_ZLIB=yes
+                shift
+                ;;
             clone-grpc)
                 CLONE_GRPC=yes
                 shift
                 ;;
             build-grpc)
+                BUILD_GRPC=yes
+                shift
+                ;;
+            grpc)
+                CLONE_GRPC=yes
                 BUILD_GRPC=yes
                 shift
                 ;;
@@ -196,11 +244,21 @@ else
                 BUILD_ARROW=yes
                 shift
                 ;;
+            arrow)
+                CLONE_ARROW=yes
+                BUILD_ARROW=yes
+                shift
+                ;;
             clone-immer)
                 CLONE_IMMER=yes
                 shift
                 ;;
             build-immer)
+                BUILD_IMMER=yes
+                shift
+                ;;
+            immer)
+                CLONE_IMMER=yes
                 BUILD_IMMER=yes
                 shift
                 ;;
@@ -416,6 +474,27 @@ if [ "$BUILD_GFLAGS" = "yes" ]; then
 fi
 
 ### flatbuffers
+# In typical situations you don't need the flatbuffers library, because Deephaven
+# has vendored the flatbuffers library (currently v2.0.6), taken the subset of files
+# needed, and changed its namespace to avoid any chance of conflict with other
+# instances of flatbuffers (specifically, the one linked by Apache Arrow).
+#
+# The only scenario where you may need to build flatbuffers v2.0.6 is if the Barrage
+# format changes (https://github.com/deephaven/barrage/blob/main/format/Barrage.fbs)
+# and you want to re-run flatc.
+#
+# On the other hand if you decide to move Deephaven to a newer version of flatbuffers,
+# you should change this script to check out and build that
+# newer version, copy over all the modified files to the appropriate place off of
+# $DHSRC/cpp-client/deephaven/dhcore/third_party/flatbuffers, fix their namespaces, and
+# update the patch.001 and README.md files. You will also need to rerun flatc with
+# the newly compiled library.
+#
+# To rerun flatc, you need to run the following steps
+# cd $BARRAGE_REPO/format
+# echo "root_type BarrageMessageWrapper;" >> Barrage.fbs  # TODO make this change permanent
+# $DHCPP/lib/flatbuffers/bin/flatc --cpp Barrage.fbs
+# mv Barrage_generated. $DHSRC/cpp-client/deephaven/dhcore/flatbuf/deephaven/flatbuf
 if [ "$CLONE_FLATBUFFERS" = "yes" ]; then
   echo
   echo "*** Clone flatbuffers"
@@ -456,6 +535,7 @@ if [ "$BUILD_CARES" = "yes" ]; then
   mkdir -p build && cd build
   cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/cares \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
         -DCARES_SHARED=OFF \
         -DCARES_STATIC=ON \
         -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
@@ -538,7 +618,8 @@ if [ "$BUILD_ARROW" = "yes" ]; then
   export CPATH=${PFX}/protobuf/include${CPATH+:$CPATH}
   cd $SRC/arrow/cpp
   mkdir -p build && cd build
-  cmake -DCMAKE_CXX_STANDARD=17 \
+  cmake -DProtobuf_DIR=${PFX}/protobuf \
+        -DCMAKE_CXX_STANDARD=17 \
         -DARROW_BUILD_STATIC=ON \
         -DARROW_BUILD_SHARED=OFF \
         -DARROW_FLIGHT=ON \
@@ -599,10 +680,14 @@ echo
 if [ "$GENERATE_ENV" = "yes" ]; then
   echo -n "Creating env.sh..."
   cd $DHDEPS_HOME
-  (echo "export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH"
-   echo "export CMAKE_BUILD_TYPE=$BUILD_TYPE"
-#  Ensure this is evaluated not now, but when the generated code is read.
-   echo 'export NCPUS=`getconf _NPROCESSORS_ONLN`') > env.sh
+  (
+# Note use of double or single quotes below to distinguish between the need
+# for either valuating now or delaying evaluation.
+   echo "DHCPP=\"$DHDEPS_HOME\"; export DHCPP"
+   echo 'DHCPP_LOCAL="$DHCPP/local"; export DHCPP_LOCAL'
+   echo "CMAKE_PREFIX_PATH=\"$CMAKE_PREFIX_PATH\"; export CMAKE_PREFIX_PATH"
+   echo 'NCPUS=`getconf _NPROCESSORS_ONLN`; export NCPUS'
+  ) > env.sh
   echo DONE.
 fi
 
