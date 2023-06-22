@@ -58,6 +58,10 @@ function usage {
     echo "  the dependent libraries from the locations they are being built"
     echo "  by this script."
     echo
+    echo "  Note that flatbuffers is special, is not normally required,"
+    echo "  and when updating it it requires additional manual steps."
+    echo "  See comments in this script for details about updating flatbuffers."
+    echo
     echo "  Examples:"
     echo "    * to clone and build all dependencies, do not set any"
     echo "      related environment variables, and just call: $0"
@@ -470,6 +474,27 @@ if [ "$BUILD_GFLAGS" = "yes" ]; then
 fi
 
 ### flatbuffers
+# In typical situations you don't need the flatbuffers library, because Deephaven
+# has vendored the flatbuffers library (currently v2.0.6), taken the subset of files
+# needed, and changed its namespace to avoid any chance of conflict with other
+# instances of flatbuffers (specifically, the one linked by Apache Arrow).
+#
+# The only scenario where you may need to build flatbuffers v2.0.6 is if the Barrage
+# format changes (https://github.com/deephaven/barrage/blob/main/format/Barrage.fbs)
+# and you want to re-run flatc.
+#
+# On the other hand if you decide to move Deephaven to a newer version of flatbuffers,
+# you should change this script to check out and build that
+# newer version, copy over all the modified files to the appropriate place off of
+# $DHSRC/cpp-client/deephaven/dhcore/third_party/flatbuffers, fix their namespaces, and
+# update the patch.001 and README.md files. You will also need to rerun flatc with
+# the newly compiled library.
+#
+# To rerun flatc, you need to run the following steps
+# cd $BARRAGE_REPO/format
+# echo "root_type BarrageMessageWrapper;" >> Barrage.fbs  # TODO make this change permanent
+# $DHCPP/lib/flatbuffers/bin/flatc --cpp Barrage.fbs
+# mv Barrage_generated. $DHSRC/cpp-client/deephaven/dhcore/flatbuf/deephaven/flatbuf
 if [ "$CLONE_FLATBUFFERS" = "yes" ]; then
   echo
   echo "*** Clone flatbuffers"
