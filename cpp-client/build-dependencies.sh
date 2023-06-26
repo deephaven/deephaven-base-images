@@ -340,6 +340,8 @@ fi
 #
 : ${GIT_FLAGS:="--quiet -c advice.detachedHead=false"}
 
+BUILD_DIR=build_dir
+
 ### absl
 if [ "$CLONE_ABSL" = "yes" ]; then
   echo
@@ -353,7 +355,7 @@ if [ "$BUILD_ABSL" = "yes" ]; then
   echo
   echo "*** Building abseil"
   cd $SRC/abseil-cpp
-  mkdir -p cmake/build && cd cmake/build
+  mkdir -p "cmake/$BUILD_DIR" && cd "cmake/$BUILD_DIR"
   cmake -DCMAKE_CXX_STANDARD=17 \
         -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
@@ -380,7 +382,7 @@ if [ "$BUILD_ZLIB" = "yes" ]; then
   echo
   echo "*** Building zlib"
   cd $SRC/zlib
-  mkdir -p build && cd build
+  mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/zlib \
         ..
@@ -409,7 +411,7 @@ if [ "$BUILD_PROTOBUF" = "yes" ]; then
   echo "*** Building protobuf"
   cd $SRC/protobuf
   # Note in the previously used version we built inside cmake/build; not anymore.
-  mkdir -p cmake/build && cd cmake/build
+  mkdir -p "cmake/$BUILD_DIR" && cd "cmake/$BUILD_DIR"
   cmake -Dprotobuf_BUILD_TESTS=OFF \
         -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
@@ -436,7 +438,7 @@ if [ "$BUILD_RE2" = "yes" ]; then
   echo
   echo "*** Building re2"
   cd $SRC/re2
-  mkdir -p build && cd build
+  mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/re2 \
@@ -461,7 +463,7 @@ if [ "$BUILD_GFLAGS" = "yes" ]; then
   echo
   echo "*** Building gflags"
   cd $SRC/gflags
-  mkdir -p build && cd build
+  mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/gflags \
         ..
@@ -507,7 +509,7 @@ if [ "$BUILD_FLATBUFFERS" = "yes" ]; then
   echo
   echo "*** Building flatbuffers"
   cd $SRC/flatbuffers
-  mkdir -p build && cd build
+  mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/flatbuffers \
         ..
@@ -532,7 +534,7 @@ if [ "$BUILD_CARES" = "yes" ]; then
   echo
   echo "*** Building c-ares"
   cd $SRC/c-ares
-  mkdir -p build && cd build
+  mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/cares \
         -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
@@ -561,7 +563,7 @@ if [ "$BUILD_GRPC" = "yes" ]; then
   echo
   echo "*** Building grpc"
   cd $SRC/grpc
-  mkdir -p cmake/build && cd cmake/build
+  mkdir -p "cmake/$BUILD_DIR" && cd "cmake/$BUILD_DIR"
   cmake -DCMAKE_CXX_STANDARD=17 \
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
@@ -617,7 +619,7 @@ if [ "$BUILD_ARROW" = "yes" ]; then
   export CPATH=${PFX}/abseil/include${CPATH+:$CPATH}
   export CPATH=${PFX}/protobuf/include${CPATH+:$CPATH}
   cd $SRC/arrow/cpp
-  mkdir -p build && cd build
+  mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake -DProtobuf_DIR=${PFX}/protobuf \
         -DCMAKE_CXX_STANDARD=17 \
         -DARROW_BUILD_STATIC=ON \
@@ -658,7 +660,7 @@ if [ "$BUILD_IMMER" = "yes" ]; then
   echo
   echo "*** Building immer"
   cd $SRC/immer
-  mkdir -p build && cd build
+  mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/immer \
         -DCMAKE_CXX_STANDARD=17 \
