@@ -13,15 +13,14 @@ set -euxo pipefail
 
 function usage {
     echo "Usage: $0 [--clean] [action]"
-    echo "   where action is one of"
-    echo "     * 'clone' or 'build' followed by '-' and a dependent library name,"
-    echo "        one of {protobuf|re2|gflags|absl|flatbuffers|cares|zlib|grpc|arrow|immer|boost}"
-    echo "        wich imples cloning or building the respective library;"
-    echo "        eg, 'clone-protobuf' will clone protobuf."
-    echo "     *  one of {protobuf|re2|gflags|absl|flatbuffers|cares|zlib|grpc|arrow|immer|boost}"
-    echo "        with no 'clone-' or 'build-' prefix, which implies do both clone and build for the"
-    echo "        respective library."
+    echo "   where action is one or more of"
+    echo "     *  {protobuf|re2|gflags|absl|flatbuffers|cares|zlib|grpc|arrow|immer}"
+    echo "     *  any of the above prefixed by clone- or build-"
     echo "     *  'env'"
+    echo "   For example:"
+    echo "    protobuf clone-re2 build-gflags env"
+    echo "  means \"clone and build protobuf, clone re2 (but don't build), build gflags (without cloning),"
+    echo "  and create the env file.\""
     echo 
     echo "  If no actions are requested, this results in performing all default actions."
     echo "  When no individual actions are requested, an environment variable of similar"
