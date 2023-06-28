@@ -9,7 +9,7 @@
 #
 
 # Fail on first error; echo each command before executing.
-set -euxo pipefail
+set -euo pipefail
 
 function usage {
     echo "Usage: $0 [--clean] [action]"
@@ -273,6 +273,11 @@ else
         esac
     done
 fi
+
+# Enable trace output for the actual work,
+# which may help debug issues and makes more explicit in the output
+# what the script is doing.
+set -x
 
 # Add anything to PATH that should take precendence here.
 # export PATH=/l/cmake/3.21.2/bin:/l/gcc/11.2.0/bin:$PATH
