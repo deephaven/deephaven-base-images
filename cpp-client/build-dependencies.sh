@@ -597,25 +597,6 @@ if [ "$CLONE_ARROW" = "yes" ]; then
   # Previously used version: apache-arrow-7.0.0
   git clone $GIT_FLAGS -b apache-arrow-7.0.0 --depth 1 https://github.com/apache/arrow
   echo "*** Cloning arrow DONE"
-  echo
-  echo "*** Patching arrow"
-    # Apply apache arrow patch.
-  (cd arrow && patch -p1 <<'EOF'
-diff a/cpp/src/arrow/ipc/reader.cc b/cpp/src/arrow/ipc/reader.cc
---- a/cpp/src/arrow/ipc/reader.cc
-+++ b/cpp/src/arrow/ipc/reader.cc
-@@ -528,7 +528,7 @@ Result<std::shared_ptr<RecordBatch>> LoadRecordBatchSubset(
-       auto column = std::make_shared<ArrayData>();
-       RETURN_NOT_OK(loader.Load(&field, column.get()));
-       if (metadata->length() != column->length) {
--        return Status::IOError("Array length did not match record batch length");
-+        // return Status::IOError("Array length did not match record batch length");
-       }
-       columns[i] = std::move(column);
-       if (inclusion_mask) {
-EOF
-)
-  echo "*** Patching arrow DONE"
 fi
 if [ "$BUILD_ARROW" = "yes" ]; then
   echo
