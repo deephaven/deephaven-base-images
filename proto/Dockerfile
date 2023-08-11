@@ -4,8 +4,11 @@
 
 FROM golang:1 as go-build
 
-ARG PROTOC_GEN_GO_VERSION=v1.28
-ARG PROTOC_GEN_GO_GRPC_VERSION=v1.2
+# https://pkg.go.dev/google.golang.org/protobuf/cmd/protoc-gen-go?tab=versions
+ARG PROTOC_GEN_GO_VERSION=v1.30
+
+# https://pkg.go.dev/google.golang.org/grpc/cmd/protoc-gen-go-grpc?tab=versions
+ARG PROTOC_GEN_GO_GRPC_VERSION=v1.3
 
 RUN set -eux; \
     go install google.golang.org/protobuf/cmd/protoc-gen-go@${PROTOC_GEN_GO_VERSION}; \
