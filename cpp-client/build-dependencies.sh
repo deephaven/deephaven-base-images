@@ -378,10 +378,21 @@ set -x
 # Let's get make to print out commands as they run
 export VERBOSE=1
 
+all_libs="
+PROTOBUF
+RE2
+GFLAGS
+ABSEIL
+FLATBUFFERS
+CARES
+ZLIB
+GRPC
+ARROW
+IMMER
+"
+
 CMAKE_PREFIX_PATH=""
-for lib in \
-    PROTOBUF RE2 GFLAGS ABSEIL \
-    FLATBUFFERS CARES ZLIB GRPC ARROW IMMER; do
+for lib in $all_libs; do
   build_var="BUILD_${lib}"
   if [ "${!build_var}" = "yes" ]; then
     lib_dir=$(echo $lib | tr '[A-Z]' '[a-z]')
@@ -411,9 +422,7 @@ cmake_common_args="${cmake_pic_arg} ${cmake_shared_arg} -DCMAKE_BUILD_TYPE=${BUI
 
 if [ "$shared" = "yes" ]; then
   LD_LIBRARY_PATH=""
-  for lib in \
-    PROTOBUF RE2 GFLAGS ABSEIL \
-    FLATBUFFERS CARES ZLIB GRPC ARROW IMMER; do
+  for lib in $all_libs; do
     build_var="BUILD_${lib}"
     if [ "${!build_var}" = "yes" ]; then
       lib_dir=$(echo $lib | tr '[A-Z]' '[a-z]')
