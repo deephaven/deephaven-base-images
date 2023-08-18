@@ -12,15 +12,27 @@
 set -euo pipefail
 
 function usage {
-    echo "Usage: $0 [--clean] [action]"
+    echo "Usage: $0 [--help|-h] [--clean] [--shared] [--static-pic] [action]"
     echo "   where action is one or more of"
-    echo "     *  {protobuf|re2|gflags|absl|flatbuffers|cares|zlib|grpc|arrow|immer}"
+    echo "     *  {protobuf|re2|gflags|abseil|flatbuffers|cares|zlib|grpc|arrow|immer}"
     echo "     *  any of the above prefixed by clone- or build-"
     echo "     *  'env'"
     echo "   For example:"
     echo "    protobuf clone-re2 build-gflags env"
     echo "  means \"clone and build protobuf, clone re2 (but don't build), build gflags (without cloning),"
     echo "  and create the env file.\""
+    echo
+    echo "  Options:"
+    echo "    --clean        Remove the downloaded sources once a library is built."
+    echo "                   This is necessary for re-clonning."
+    echo "    --shared       Build shared libraries.  This is the default if not specified."
+    echo "    --static-pic   Build static libraries from object files compiled with -fPIC"
+    echo "                   (position independent code).  This is useful for creating"
+    echo "                   self-contained bundled libraries that contain all the dependencies"
+    echo "                   (eg, deephaven.so).  This can be used to produce python and R clients"
+    echo "                   that do not depend on the dynamic libraries somewhere else in the filesystem."
+    echo "                   In the past this was the default (now the default is --shared)."
+    echo "   --help|-h       Show this usage message and exit."
     echo 
     echo "  If no actions are requested, this results in performing all default actions."
     echo "  When no individual actions are requested, an environment variable of similar"
@@ -33,8 +45,8 @@ function usage {
     echo "    BUILD_RE2=yes"
     echo "    CLONE_GFLAGS=yes"
     echo "    BUILD_GFLAGS=yes"
-    echo "    CLONE_ABSL=yes"
-    echo "    BUILD_ABSL=yes"
+    echo "    CLONE_ABSEIL=yes"
+    echo "    BUILD_ABSEIL=yes"
     echo "    CLONE_FLATBUFFERS=no"
     echo "    BUILD_FLATBUFFERS=no"
     echo "    CLONE_CARES=yes"
@@ -64,8 +76,8 @@ function usage {
     echo "  Examples:"
     echo "    * to clone and build all dependencies, do not set any"
     echo "      related environment variables, and just call: $0"
-    echo "    * to build an already cloned re2 and clone and build absl,"
-    echo "      call: $0 build-re2 clone-absl build-absl"
+    echo "    * to build an already cloned re2 and clone and build abseil,"
+    echo "      call: $0 build-re2 clone-abseil build-abseil"
     echo "    * to avoid cloning protobuf, but otherwise do all other"
     echo "      default actions (this assumes protoqbuf was cloned earlier),"
     echo "      call: CLONE_PROTOBUF=no $0"
@@ -78,12 +90,61 @@ function usage {
 }
 
 clean="no"
-if [ "$#" -ge 1 ]; then
+
+shared="yes"
+cmake_shared_arg="-DBUILD_SHARED_LIBS=ON"
+cmake_pic_arg=""
+
+shared_opt=""
+
+while [ "$#" -ge 1 ]; do
     if [ "$1" == "--clean" ]; then
         clean="yes"
         shift
+        continue
     fi
-fi
+    if [ "$1" == "--shared" ]; then
+        if [ "$shared_opt" != "" ]; then
+            echo "$0: can't use both --shared and $shared_opt." 1>&2
+            exit 1
+        fi
+        shared_opt="--shared"
+        # Already configured as default
+        shift
+        continue
+    fi
+    if [ "$1" == "--static-pic" ]; then
+        if [ "$shared_opt" != "" ]; then
+            echo "$0: can't use both --static-pic and $shared_opt." 1>&2
+            exit 1
+        fi
+        shared_opt="--static-pic"
+        shared=no
+        cmake_shared_arg=""
+        cmake_pic_arg="-DCMAKE_POSITION_INDEPENDENT_CODE=TRUE"
+        shared_explcitly_selected="yes"
+        shift
+        continue
+    fi
+    if [ "$1" == "--static" ]; then
+        if [ "$shared_opt" != "" ]; then
+            echo "$0: can't use both --static and $shared_opt." 1>&2
+            exit 1
+        fi
+        shared_opt="--static"
+        shared=no
+        cmake_shared_arg=""
+        cmake_pic_arg=""
+        shared_explcitly_selected="yes"
+        shift
+        continue
+    fi
+    if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
+      usage
+      exit 0
+    fi
+    break
+done
 
 if [ "$#" -eq 0 ]; then
     : ${CLONE_PROTOBUF:=yes}
@@ -92,8 +153,8 @@ if [ "$#" -eq 0 ]; then
     : ${BUILD_RE2:=yes}
     : ${CLONE_GFLAGS:=yes}
     : ${BUILD_GFLAGS:=yes}
-    : ${CLONE_ABSL:=yes}
-    : ${BUILD_ABSL:=yes}
+    : ${CLONE_ABSEIL:=yes}
+    : ${BUILD_ABSEIL:=yes}
     : ${CLONE_FLATBUFFERS:=no}
     : ${BUILD_FLATBUFFERS:=no}
     : ${CLONE_CARES:=yes}
@@ -114,8 +175,8 @@ else
     BUILD_RE2=no
     CLONE_GFLAGS=no
     BUILD_GFLAGS=no
-    CLONE_ABSL=no
-    BUILD_ABSL=no
+    CLONE_ABSEIL=no
+    BUILD_ABSEIL=no
     CLONE_FLATBUFFERS=no
     BUILD_FLATBUFFERS=no
     CLONE_CARES=no
@@ -170,17 +231,17 @@ else
                 BUILD_GFLAGS=yes
                 shift
                 ;;
-            clone-absl)
-                CLONE_ABSL=yes
+            clone-abseil)
+                CLONE_ABSEIL=yes
                 shift
                 ;;
-            build-absl)
-                BUILD_ABSL=yes
+            build-abseil)
+                BUILD_ABSEIL=yes
                 shift
                 ;;
-            absl)
-                CLONE_ABSL=yes
-                BUILD_ABSL=yes
+            abseil)
+                CLONE_ABSEIL=yes
+                BUILD_ABSEIL=yes
                 shift
                 ;;
             clone-flatbuffers)
@@ -317,18 +378,18 @@ set -x
 # Let's get make to print out commands as they run
 export VERBOSE=1
 
-export CMAKE_PREFIX_PATH=\
-${PFX}/abseil:\
-${PFX}/cares:\
-${PFX}/flatbuffers:\
-${PFX}/gflags:\
-${PFX}/protobuf:\
-${PFX}/re2:\
-${PFX}/zlib:\
-${PFX}/grpc:\
-${PFX}/arrow:\
-${PFX}/immer:\
-${PFX}/deephaven
+CMAKE_PREFIX_PATH=""
+for lib in \
+    PROTOBUF RE2 GFLAGS ABSEIL \
+    FLATBUFFERS CARES ZLIB GRPC ARROW IMMER; do
+  build_var="BUILD_${lib}"
+  if [ "${!build_var}" = "yes" ]; then
+    lib_dir=$(echo $lib | tr '[A-Z]' '[a-z]')
+    CMAKE_PREFIX_PATH+=":${PFX}/${lib_dir}"
+  fi
+done
+CMAKE_PREFIX_PATH+=":${PFX}/deephaven"
+export CMAKE_PREFIX_PATH
 
 if [ ! -d $SRC ]; then
   mkdir -p $SRC
@@ -346,8 +407,24 @@ fi
 
 BUILD_DIR=build_dir
 
-### absl
-if [ "$CLONE_ABSL" = "yes" ]; then
+cmake_common_args="${cmake_pic_arg} ${cmake_shared_arg} -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
+
+if [ "$shared" = "yes" ]; then
+  LD_LIBRARY_PATH=""
+  for lib in \
+    PROTOBUF RE2 GFLAGS ABSEIL \
+    FLATBUFFERS CARES ZLIB GRPC ARROW IMMER; do
+    build_var="BUILD_${lib}"
+    if [ "${!build_var}" = "yes" ]; then
+      lib_dir=$(echo $lib | tr '[A-Z]' '[a-z]')
+      LD_LIBRARY_PATH+=":${PFX}/${lib_dir}/lib"
+    fi
+  done
+  export LD_LIBRARY_PATH
+fi
+
+### abseil
+if [ "$CLONE_ABSEIL" = "yes" ]; then
   echo
   echo "*** Clone abseil"
   cd $SRC
@@ -355,14 +432,13 @@ if [ "$CLONE_ABSL" = "yes" ]; then
   git clone $GIT_FLAGS -b 20211102.0 --depth 1 https://github.com/abseil/abseil-cpp.git
   echo "*** Cloning abseil DONE"
 fi
-if [ "$BUILD_ABSL" = "yes" ]; then
+if [ "$BUILD_ABSEIL" = "yes" ]; then
   echo
   echo "*** Building abseil"
   cd $SRC/abseil-cpp
   mkdir -p "cmake/$BUILD_DIR" && cd "cmake/$BUILD_DIR"
   cmake -DCMAKE_CXX_STANDARD=17 \
-        -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
-        -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+        ${cmake_common_args} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/abseil \
         ../..
   make -j$NCPUS
@@ -387,14 +463,16 @@ if [ "$BUILD_ZLIB" = "yes" ]; then
   echo "*** Building zlib"
   cd $SRC/zlib
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
-  cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+  cmake ${cmake_common_args} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/zlib \
         ..
   make -j$NCPUS
   make install
-  # We want to avoid anything linking against shared libraries,
-  # and there is no way to ask zlib build to not generate shared libraries...
-  rm -f ${PFX}/zlib/lib/libz.so*
+  if [ "$shared" != "yes" ]; then
+    # We want to avoid anything linking against shared libraries,
+    # and there is no way to ask zlib build to not generate shared libraries...
+    rm -f ${PFX}/zlib/lib/libz.so*
+  fi
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/zlib"
   fi
@@ -417,7 +495,7 @@ if [ "$BUILD_PROTOBUF" = "yes" ]; then
   # Note in the previously used version we built inside cmake/build; not anymore.
   mkdir -p "cmake/$BUILD_DIR" && cd "cmake/$BUILD_DIR"
   cmake -Dprotobuf_BUILD_TESTS=OFF \
-        -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
+        ${cmake_common_args} \
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/protobuf \
         ..
@@ -443,8 +521,7 @@ if [ "$BUILD_RE2" = "yes" ]; then
   echo "*** Building re2"
   cd $SRC/re2
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
-  cmake -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
-        -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+  cmake ${cmake_common_args} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/re2 \
         ..
   make -j$NCPUS
@@ -468,7 +545,7 @@ if [ "$BUILD_GFLAGS" = "yes" ]; then
   echo "*** Building gflags"
   cd $SRC/gflags
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
-  cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+  cmake ${cmake_common_args} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/gflags \
         ..
   make -j$NCPUS
@@ -514,7 +591,7 @@ if [ "$BUILD_FLATBUFFERS" = "yes" ]; then
   echo "*** Building flatbuffers"
   cd $SRC/flatbuffers
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
-  cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+  cmake ${cmake_common_args} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/flatbuffers \
         ..
   make -j$NCPUS
@@ -535,16 +612,18 @@ if [ "$CLONE_CARES" = "yes" ]; then
   echo "*** Cloning ares DONE"
 fi
 if [ "$BUILD_CARES" = "yes" ]; then
+  if [ "$shared" = "yes" ]; then
+    cmake_cares_extra_args="-DCARES_SHARED=ON -DCARES_STATIC=ON"
+  else
+    cmake_cares_extra_args="-DCARES_SHARED=OFF -DCARES_STATIC=ON"
+  fi
   echo
   echo "*** Building c-ares"
   cd $SRC/c-ares
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
-  cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+  cmake ${cmake_common_args} \
+        ${cmake_cares_extra_args} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/cares \
-        -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
-        -DCARES_SHARED=OFF \
-        -DCARES_STATIC=ON \
-        -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
         ..
   make -j$NCPUS
   make install
@@ -552,6 +631,7 @@ if [ "$BUILD_CARES" = "yes" ]; then
     rm -fr "$SRC/c-ares"
   fi
   echo "*** Building ares DONE"
+  unset cmake_cares_extra_args
 fi
 
 ### grpc
@@ -569,8 +649,7 @@ if [ "$BUILD_GRPC" = "yes" ]; then
   cd $SRC/grpc
   mkdir -p "cmake/$BUILD_DIR" && cd "cmake/$BUILD_DIR"
   cmake -DCMAKE_CXX_STANDARD=17 \
-        -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-        -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
+        ${cmake_common_args} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/grpc \
         -DgRPC_INSTALL=ON \
         -DgRPC_ABSL_PROVIDER=package \
@@ -599,6 +678,11 @@ if [ "$CLONE_ARROW" = "yes" ]; then
   echo "*** Cloning arrow DONE"
 fi
 if [ "$BUILD_ARROW" = "yes" ]; then
+  if [ "$shared" = "yes" ]; then
+    cmake_arrow_extra_args="-DARROW_BUILD_STATIC=ON -DARROW_BUILD_SHARED=ON"
+  else
+    cmake_arrow_extra_args="-DARROW_BUILD_STATIC=ON -DARROW_BUILD_SHARED=OFF"
+  fi
   echo
   echo "*** Building arrow"
   export CPATH=${PFX}/abseil/include${CPATH+:$CPATH}
@@ -607,8 +691,8 @@ if [ "$BUILD_ARROW" = "yes" ]; then
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake -DProtobuf_DIR=${PFX}/protobuf \
         -DCMAKE_CXX_STANDARD=17 \
-        -DARROW_BUILD_STATIC=ON \
-        -DARROW_BUILD_SHARED=OFF \
+        ${cmake_common_args} \
+        ${cmake_arrow_extra_args} \
         -DARROW_FLIGHT=ON \
         -DARROW_CSV=ON \
         -DARROW_FILESYSTEM=ON \
@@ -622,7 +706,6 @@ if [ "$BUILD_ARROW" = "yes" ]; then
         -DARROW_WITH_ZSTD=ON \
         -DARROW_WITH_BROTLI=ON \
 	-DARROW_SIMD_LEVEL=NONE \
-        -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/arrow \
         ..
   make -j$NCPUS
@@ -631,6 +714,7 @@ if [ "$BUILD_ARROW" = "yes" ]; then
     rm -fr "$SRC/arrow"
   fi
   echo "*** Building arrow DONE"
+  unset cmake_extra_arrow_args
 fi
 
 ### immer
@@ -646,7 +730,7 @@ if [ "$BUILD_IMMER" = "yes" ]; then
   echo "*** Building immer"
   cd $SRC/immer
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
-  cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+  cmake ${cmake_common_args} \
         -DCMAKE_INSTALL_PREFIX=${PFX}/immer \
         -DCMAKE_CXX_STANDARD=17 \
         -Dimmer_BUILD_EXTRAS=OFF \
@@ -674,6 +758,9 @@ if [ "$GENERATE_ENV" = "yes" ]; then
    echo 'DHCPP_LOCAL="$DHCPP/local"; export DHCPP_LOCAL'
    echo "CMAKE_PREFIX_PATH=\"$CMAKE_PREFIX_PATH\"; export CMAKE_PREFIX_PATH"
    echo 'NCPUS=`getconf _NPROCESSORS_ONLN`; export NCPUS'
+   if [ "$shared" = "yes" ]; then
+     echo "LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH\"; export LD_LIBRARY_PATH"
+   fi
   ) > env.sh
   echo DONE.
 fi
