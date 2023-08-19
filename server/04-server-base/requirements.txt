@@ -1,8 +1,0 @@
-numpy
-pandas
-numba
-pyarrow
-deephaven-plugin>=0.4.0
-jedi==0.18.2
-jpy==0.13.0
-java-utilities

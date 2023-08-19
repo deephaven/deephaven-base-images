@@ -1,4 +1,0 @@
-nltk
-tensorflow~=2.7.1
-torch
-scikit-learn
