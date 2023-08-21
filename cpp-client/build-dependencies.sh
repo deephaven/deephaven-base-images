@@ -12,7 +12,7 @@
 set -euo pipefail
 
 function usage {
-    echo "Usage: $0 [--help|-h] [--clean] [--shared] [--static-pic] [action]"
+    echo "Usage: $0 [--help|-h] [--clean] [--shared] [--static-pic] [--multilocal] [action]"
     echo "   where action is one or more of"
     echo "     *  {protobuf|re2|gflags|abseil|flatbuffers|cares|zlib|grpc|arrow|immer}"
     echo "     *  any of the above prefixed by clone- or build-"
@@ -32,7 +32,8 @@ function usage {
     echo "                   (eg, deephaven.so).  This can be used to produce python and R clients"
     echo "                   that do not depend on the dynamic libraries somewhere else in the filesystem."
     echo "                   In the past this was the default (now the default is --shared)."
-    echo "   --help|-h       Show this usage message and exit."
+    echo "    --multilocal   Install each library in its own subdirectory.  This used to be the default."
+    echo "    --help|-h      Show this usage message and exit."
     echo 
     echo "  If no actions are requested, this results in performing all default actions."
     echo "  When no individual actions are requested, an environment variable of similar"
@@ -89,7 +90,20 @@ function usage {
     echo "    $0 2>&1 | tee $0.log"
 }
 
+function prefix {
+  if [ "$#" -ne 1 ]; then
+    echo "$0: Internal error: prefix called with $# arguments." 1>&2
+    exit 1
+  fi
+  if [ "$multilocal" = "yes" ]; then
+    echo "$PFX/$1"
+  else
+    echo "$PFX"
+  fi
+}
+
 clean="no"
+multilocal="no"
 
 shared="yes"
 cmake_shared_arg="-DBUILD_SHARED_LIBS=ON"
@@ -139,9 +153,14 @@ while [ "$#" -ge 1 ]; do
         shift
         continue
     fi
+    if [ "$1" == "--multilocal" ]; then
+        multilocal="yes"
+        shift
+        continue
+    fi
     if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
-      usage
-      exit 0
+        usage
+        exit 0
     fi
     break
 done
@@ -391,15 +410,19 @@ ARROW
 IMMER
 "
 
-CMAKE_PREFIX_PATH=""
-for lib in $all_libs; do
-  build_var="BUILD_${lib}"
-  if [ "${!build_var}" = "yes" ]; then
-    lib_dir=$(echo $lib | tr '[A-Z]' '[a-z]')
-    CMAKE_PREFIX_PATH+=":${PFX}/${lib_dir}"
-  fi
-done
-CMAKE_PREFIX_PATH+=":${PFX}/deephaven"
+if [ "$multilocal" = "yes" ]; then
+  CMAKE_PREFIX_PATH=""
+  for lib in $all_libs; do
+    build_var="BUILD_${lib}"
+    if [ "${!build_var}" = "yes" ]; then
+      lib_dir=$(echo $lib | tr '[A-Z]' '[a-z]')
+      CMAKE_PREFIX_PATH+=":${PFX}/${lib_dir}"
+    fi
+  done
+  CMAKE_PREFIX_PATH+=":${PFX}/deephaven"
+else
+  CMAKE_PREFIX_PATH="${PFX}"
+fi
 export CMAKE_PREFIX_PATH
 
 if [ ! -d $SRC ]; then
@@ -421,14 +444,18 @@ BUILD_DIR=build_dir
 cmake_common_args="${cmake_pic_arg} ${cmake_shared_arg} -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
 
 if [ "$shared" = "yes" ]; then
-  LD_LIBRARY_PATH=""
-  for lib in $all_libs; do
-    build_var="BUILD_${lib}"
-    if [ "${!build_var}" = "yes" ]; then
-      lib_dir=$(echo $lib | tr '[A-Z]' '[a-z]')
-      LD_LIBRARY_PATH+=":${PFX}/${lib_dir}/lib"
-    fi
-  done
+  if [ "$multilocal" = "yes" ]; then
+    LD_LIBRARY_PATH=""
+    for lib in $all_libs; do
+      build_var="BUILD_${lib}"
+      if [ "${!build_var}" = "yes" ]; then
+        lib_dir=$(echo $lib | tr '[A-Z]' '[a-z]')
+        LD_LIBRARY_PATH+=":${PFX}/${lib_dir}/lib"
+      fi
+    done
+  else
+    LD_LIBRARY_PATH="${PFX}/lib"
+  fi
   export LD_LIBRARY_PATH
 fi
 
@@ -448,7 +475,7 @@ if [ "$BUILD_ABSEIL" = "yes" ]; then
   mkdir -p "cmake/$BUILD_DIR" && cd "cmake/$BUILD_DIR"
   cmake -DCMAKE_CXX_STANDARD=17 \
         ${cmake_common_args} \
-        -DCMAKE_INSTALL_PREFIX=${PFX}/abseil \
+        -DCMAKE_INSTALL_PREFIX=$(prefix abseil) \
         ../..
   make -j$NCPUS
   make install
@@ -473,7 +500,7 @@ if [ "$BUILD_ZLIB" = "yes" ]; then
   cd $SRC/zlib
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake ${cmake_common_args} \
-        -DCMAKE_INSTALL_PREFIX=${PFX}/zlib \
+        -DCMAKE_INSTALL_PREFIX=$(prefix zlib) \
         ..
   make -j$NCPUS
   make install
@@ -506,7 +533,7 @@ if [ "$BUILD_PROTOBUF" = "yes" ]; then
   cmake -Dprotobuf_BUILD_TESTS=OFF \
         ${cmake_common_args} \
         -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-        -DCMAKE_INSTALL_PREFIX=${PFX}/protobuf \
+        -DCMAKE_INSTALL_PREFIX=$(prefix protobuf) \
         ..
   make -j$NCPUS
   make install
@@ -531,7 +558,7 @@ if [ "$BUILD_RE2" = "yes" ]; then
   cd $SRC/re2
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake ${cmake_common_args} \
-        -DCMAKE_INSTALL_PREFIX=${PFX}/re2 \
+        -DCMAKE_INSTALL_PREFIX=$(prefix re2) \
         ..
   make -j$NCPUS
   make install
@@ -555,7 +582,7 @@ if [ "$BUILD_GFLAGS" = "yes" ]; then
   cd $SRC/gflags
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake ${cmake_common_args} \
-        -DCMAKE_INSTALL_PREFIX=${PFX}/gflags \
+        -DCMAKE_INSTALL_PREFIX=$(prefix gflags) \
         ..
   make -j$NCPUS
   make install
@@ -601,7 +628,7 @@ if [ "$BUILD_FLATBUFFERS" = "yes" ]; then
   cd $SRC/flatbuffers
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake ${cmake_common_args} \
-        -DCMAKE_INSTALL_PREFIX=${PFX}/flatbuffers \
+        -DCMAKE_INSTALL_PREFIX=$(prefix flatbuffers) \
         ..
   make -j$NCPUS
   make install
@@ -632,7 +659,7 @@ if [ "$BUILD_CARES" = "yes" ]; then
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake ${cmake_common_args} \
         ${cmake_cares_extra_args} \
-        -DCMAKE_INSTALL_PREFIX=${PFX}/cares \
+        -DCMAKE_INSTALL_PREFIX=$(prefix cares) \
         ..
   make -j$NCPUS
   make install
@@ -659,7 +686,7 @@ if [ "$BUILD_GRPC" = "yes" ]; then
   mkdir -p "cmake/$BUILD_DIR" && cd "cmake/$BUILD_DIR"
   cmake -DCMAKE_CXX_STANDARD=17 \
         ${cmake_common_args} \
-        -DCMAKE_INSTALL_PREFIX=${PFX}/grpc \
+        -DCMAKE_INSTALL_PREFIX=$(prefix grpc) \
         -DgRPC_INSTALL=ON \
         -DgRPC_ABSL_PROVIDER=package \
         -DgRPC_CARES_PROVIDER=package \
@@ -715,7 +742,7 @@ if [ "$BUILD_ARROW" = "yes" ]; then
         -DARROW_WITH_ZSTD=ON \
         -DARROW_WITH_BROTLI=ON \
 	-DARROW_SIMD_LEVEL=NONE \
-        -DCMAKE_INSTALL_PREFIX=${PFX}/arrow \
+        -DCMAKE_INSTALL_PREFIX=$(prefix arrow) \
         ..
   make -j$NCPUS
   make install
@@ -740,7 +767,7 @@ if [ "$BUILD_IMMER" = "yes" ]; then
   cd $SRC/immer
   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
   cmake ${cmake_common_args} \
-        -DCMAKE_INSTALL_PREFIX=${PFX}/immer \
+        -DCMAKE_INSTALL_PREFIX=$(prefix immer) \
         -DCMAKE_CXX_STANDARD=17 \
         -Dimmer_BUILD_EXTRAS=OFF \
         -Dimmer_BUILD_TESTS=OFF \
