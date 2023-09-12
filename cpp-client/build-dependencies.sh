@@ -5,11 +5,31 @@
 #
 
 #
-# Tested on Ubuntu 20.04
+# Tested on Ubuntu 22.04
+#
+# On Ubuntu, the following packages need to be installed:
+#
+# $ sudo apt -y install git g++ cmake make build-essential zlib1g-dev libssl-dev pkg-config
+#
+# On Fedora, the following packages need to be installed:
+#
+# $ sudo dnf -y groupinstall 'Development Tools'
+# $ sudo dnf -y install cmake gcc-c++ openssl-devel
 #
 
 # Fail on first error; echo each command before executing.
 set -euo pipefail
+
+if [ -f /etc/redhat-release ]; then
+    fedora=yes
+    debian=no
+elif [ -f /etc/issue ] && grep -qE 'Ubuntu|Debian' /etc/issue; then
+    debian=yes
+    fedora=no
+else
+  echo "$0: Unsupported platform: not fedora, not ubuntu, aborting." 1>&2
+  exit 1
+fi
 
 function usage {
     echo "Usage: $0 [--help|-h] [--clean] [--shared] [--static-pic] [--multilocal] [action]"
@@ -65,7 +85,7 @@ function usage {
     echo "  For the case where options are provided, each option of the form"
     echo "  clone-\${libraryname} and build-\${libraryname} respectively"
     echo "  clones the dependent library source and builds it."
-    echo "  The generate-env option generates a shell source file called"
+    echo "  The env option generates a shell source file called"
     echo "  env.sh that contains the cmake variable definitions needed to use"
     echo "  the dependent libraries from the locations they are being built"
     echo "  by this script."
@@ -366,8 +386,8 @@ set -x
 # export CC=/l/gcc/11.2.0/bin/gcc
 # export CXX=/l/gcc/11.2.0/bin/g++
 
-# Set to "Debug" or "Release"
-: ${BUILD_TYPE:=Debug}
+# Set to "Debug", "Release", or "RelWithDebInfo".
+: ${BUILD_TYPE:=RelWithDebInfo}
 
 # Set to where you intend the sources for and installed depdenencies to live.
 : ${DHDEPS_HOME:=$(pwd)}
@@ -451,10 +471,16 @@ if [ "$shared" = "yes" ]; then
       if [ "${!build_var}" = "yes" ]; then
         lib_dir=$(echo $lib | tr '[A-Z]' '[a-z]')
         LD_LIBRARY_PATH+=":${PFX}/${lib_dir}/lib"
+        if [ "$fedora" = "yes" ]; then
+          LD_LIBRARY_PATH+=":${PFX}/${lib_dir}/lib64"
+        fi
       fi
     done
   else
     LD_LIBRARY_PATH="${PFX}/lib"
+    if [ "$fedora" = "yes" ]; then
+      LD_LIBRARY_PATH+=":${PFX}/lib64"
+    fi
   fi
   export LD_LIBRARY_PATH
 fi
