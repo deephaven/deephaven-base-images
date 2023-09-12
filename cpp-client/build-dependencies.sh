@@ -21,9 +21,11 @@
 set -euo pipefail
 
 if [ -f /etc/redhat-release ]; then
-  fedora=yes
+    fedora=yes
+    debian=no
 elif [ -f /etc/issue ] && grep -qE 'Ubuntu|Debian' /etc/issue; then
-  ubuntu=yes
+    debian=yes
+    fedora=no
 else
   echo "$0: Unsupported platform: not fedora, not ubuntu, aborting." 1>&2
   exit 1
