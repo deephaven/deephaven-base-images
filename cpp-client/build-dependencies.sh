@@ -5,7 +5,7 @@
 #
 
 #
-# Tested on Ubuntu 22.04 and Fedora 28.
+# Tested on Ubuntu 22.04
 #
 # On Ubuntu, the following packages need to be installed:
 #
