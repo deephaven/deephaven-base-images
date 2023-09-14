@@ -462,6 +462,9 @@ fi
 BUILD_DIR=build_dir
 
 cmake_common_args="${cmake_pic_arg} ${cmake_shared_arg} -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
+# In some platforms (eg, fedora) some libraries (eg, arrow, abseil) end up installing
+# libraries in `lib64` instead of `lib`.  We want to keep our LD_LIBRARY_PATH simple.
+cmake_common_args+=" -DCMAKE_INSTALL_LIBDIR=lib"
 
 if [ "$shared" = "yes" ]; then
   if [ "$multilocal" = "yes" ]; then
@@ -471,16 +474,10 @@ if [ "$shared" = "yes" ]; then
       if [ "${!build_var}" = "yes" ]; then
         lib_dir=$(echo $lib | tr '[A-Z]' '[a-z]')
         LD_LIBRARY_PATH+=":${PFX}/${lib_dir}/lib"
-        if [ "$fedora" = "yes" ]; then
-          LD_LIBRARY_PATH+=":${PFX}/${lib_dir}/lib64"
-        fi
       fi
     done
   else
     LD_LIBRARY_PATH="${PFX}/lib"
-    if [ "$fedora" = "yes" ]; then
-      LD_LIBRARY_PATH+=":${PFX}/lib64"
-    fi
   fi
   export LD_LIBRARY_PATH
 fi
