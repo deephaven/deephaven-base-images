@@ -822,7 +822,7 @@ if [ "$GENERATE_ENV" = "yes" ]; then
   cd $DHDEPS_HOME
   (
 # Note use of double or single quotes below to distinguish between the need
-# for either valuating now or delaying evaluation.
+# for either evaluating now or delaying evaluation.
    echo "DHCPP=\"$DHDEPS_HOME\"; export DHCPP"
    echo "CMAKE_PREFIX_PATH=\"$CMAKE_PREFIX_PATH\"; export CMAKE_PREFIX_PATH"
    echo 'NCPUS=`getconf _NPROCESSORS_ONLN`; export NCPUS'
