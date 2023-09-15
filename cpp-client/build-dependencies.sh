@@ -52,7 +52,7 @@ function usage {
     echo "                   (eg, deephaven.so).  This can be used to produce python and R clients"
     echo "                   that do not depend on the dynamic libraries somewhere else in the filesystem."
     echo "                   In the past this was the default (now the default is --shared)."
-    echo "    --multilocal   Install each library in its own subdirectory.  This used to be the default."
+    echo "    --multilocal   Install each library in its own subdirectory under 'local'.  This used to be the default."
     echo "    --help|-h      Show this usage message and exit."
     echo 
     echo "  If no actions are requested, this results in performing all default actions."
@@ -116,7 +116,7 @@ function prefix {
     exit 1
   fi
   if [ "$multilocal" = "yes" ]; then
-    echo "$PFX/$1"
+    echo "$PFX/local/$1"
   else
     echo "$PFX"
   fi
@@ -412,7 +412,7 @@ set -x
 : ${SRC:=$DHDEPS_HOME/src}
 
 # Where the install prefix paths will go
-: ${PFX:=$DHDEPS_HOME/local}
+: ${PFX:=$DHDEPS_HOME}
 
 # Let's get make to print out commands as they run
 export VERBOSE=1
@@ -824,7 +824,6 @@ if [ "$GENERATE_ENV" = "yes" ]; then
 # Note use of double or single quotes below to distinguish between the need
 # for either valuating now or delaying evaluation.
    echo "DHCPP=\"$DHDEPS_HOME\"; export DHCPP"
-   echo 'DHCPP_LOCAL="$DHCPP/local"; export DHCPP_LOCAL'
    echo "CMAKE_PREFIX_PATH=\"$CMAKE_PREFIX_PATH\"; export CMAKE_PREFIX_PATH"
    echo 'NCPUS=`getconf _NPROCESSORS_ONLN`; export NCPUS'
    if [ "$shared" = "yes" ]; then
