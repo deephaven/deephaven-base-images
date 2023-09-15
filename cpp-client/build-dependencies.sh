@@ -502,6 +502,7 @@ if [ "$BUILD_ABSEIL" = "yes" ]; then
         ../..
   make -j$NCPUS
   make install
+  cd ../.. && rm -fr "cmake/$BUILD_DIR"
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/abseil-cpp"
   fi
@@ -527,6 +528,7 @@ if [ "$BUILD_ZLIB" = "yes" ]; then
         ..
   make -j$NCPUS
   make install
+  cd .. && rm -fr "$BUILD_DIR"
   if [ "$shared" != "yes" ]; then
     # We want to avoid anything linking against shared libraries,
     # and there is no way to ask zlib build to not generate shared libraries...
@@ -560,6 +562,7 @@ if [ "$BUILD_PROTOBUF" = "yes" ]; then
         ..
   make -j$NCPUS
   make install
+  cd ../.. && rm -fr "cmake/$BUILD_DIR"
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/protobuf"
   fi
@@ -585,6 +588,7 @@ if [ "$BUILD_RE2" = "yes" ]; then
         ..
   make -j$NCPUS
   make install
+  cd .. && rm -fr "$BUILD_DIR"
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/re2"
   fi
@@ -609,6 +613,7 @@ if [ "$BUILD_GFLAGS" = "yes" ]; then
         ..
   make -j$NCPUS
   make install
+  cd .. && rm -fr "$BUILD_DIR"
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/gflags"
   fi
@@ -655,6 +660,7 @@ if [ "$BUILD_FLATBUFFERS" = "yes" ]; then
         ..
   make -j$NCPUS
   make install
+  cd .. && rm -fr "$BUILD_DIR"
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/flatbuffers"
   fi
@@ -686,6 +692,7 @@ if [ "$BUILD_CARES" = "yes" ]; then
         ..
   make -j$NCPUS
   make install
+  cd .. && rm -fr "$BUILD_DIR"
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/c-ares"
   fi
@@ -721,6 +728,7 @@ if [ "$BUILD_GRPC" = "yes" ]; then
         ../..
   make -j$NCPUS
   make install
+  cd ../.. && rm -fr "cmake/$BUILD_DIR"
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/grpc"
   fi
@@ -769,6 +777,7 @@ if [ "$BUILD_ARROW" = "yes" ]; then
         ..
   make -j$NCPUS
   make install
+  cd .. && rm -fr "$BUILD_DIR"
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/arrow"
   fi
@@ -798,6 +807,7 @@ if [ "$BUILD_IMMER" = "yes" ]; then
         ..
   make -j$NCPUS
   make install
+  cd .. && rm -fr "$BUILD_DIR"
   if [ "$clean" = "yes" ]; then
     rm -fr "$SRC/immer"
   fi
