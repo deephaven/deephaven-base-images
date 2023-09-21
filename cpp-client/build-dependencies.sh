@@ -23,9 +23,15 @@ set -euo pipefail
 if [ -f /etc/redhat-release ]; then
     fedora=yes
     debian=no
+    if grep -q "^Fedora release 38 " /etc/redhat-release; then
+      fedora38=yes
+    else
+      fedora38=no
+    fi
 elif [ -f /etc/issue ] && grep -qE 'Ubuntu|Debian' /etc/issue; then
     debian=yes
     fedora=no
+    fedora38=no
 else
   echo "$0: Unsupported platform: not fedora, not ubuntu, aborting." 1>&2
   exit 1
@@ -493,6 +499,19 @@ if [ "$CLONE_ABSEIL" = "yes" ]; then
   # Previously used version: 20210324.2
   git clone $GIT_FLAGS -b 20211102.0 --depth 1 https://github.com/abseil/abseil-cpp.git
   echo "*** Cloning abseil DONE"
+  if [ "$fedora38" = "yes" ]; then
+  echo "*** Patching abseil for Fedora 38"
+    patch -p0 <<'END'
+--- abseil-cpp/absl/strings/internal/str_format/extension.h.orig        2023-09-21 03:15:05.004224385 +0000
++++ abseil-cpp/absl/strings/internal/str_format/extension.h     2023-09-21 03:15:23.408208301 +0000
+@@ -19,6 +19,7 @@
+ #include <limits.h>
+
+ #include <cstddef>
++#include <cstdint>
+ #include <cstring>
+END
+  fi
 fi
 if [ "$BUILD_ABSEIL" = "yes" ]; then
   echo
