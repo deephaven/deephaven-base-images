@@ -24,15 +24,49 @@ variable "TAG" {
     default = "latest"
 }
 
-# User for cpp-client, passed to cmake as build type.
-# Typically 'Debug' or 'Release'
-# 'Debug' may be conveniennt in some manual/development
+#
+# BEGIN cpp-client specific variables
+#
+
+# Passed to cmake as CMAKE_BUILD_TYPE
+# Typically 'Debug','Release', or 'RelWithDebInfo'.
+# 'Debug' may be convenient in some manual/development
 # settings, but is considerably more expensive in terms
 # of space and also somewhat more expensive in build time.
 # So we default to 'Release'.
 variable "BUILD_TYPE" {
     default = "Release"
 }
+
+#
+# The base distribution to use for the build.
+# Examples: 'fedora', 'ubuntu', 'registry.access.redhat.com/ubi8/ubi-minimal'
+#
+variable "DISTRO_BASE" {
+    default = "ubuntu"
+}
+
+# A short string to identify the base distribution
+# in conditional code in the Dockerfile.
+# Examples: 'fedora', 'ubuntu', 'ubi'
+variable "DISTRO_BASE_SHORT" {
+    default = "ubuntu"
+}
+
+# The version tag of the DISTRO_BASE to use.
+# Examples: '22.04' (for ubuntu), '38' (for fedora) '8.8' (for ubi).
+variable "DISTRO_VERSION" {
+    default = "22.04"
+}
+
+# The CMAKE_INSTALL_PREFIX for the libraries being built.
+variable "PREFIX" {
+    default = "/opt/deephaven"
+}
+
+#
+# END cpp-client specific variables.
+#
 
 target "protoc-base" {
     context = "proto/"
@@ -48,6 +82,10 @@ target "cpp-client-base" {
     tags = [ "${REPO_PREFIX}cpp-client-base:${TAG}" ]
     args = {
         "BUILD_TYPE" = "${BUILD_TYPE}"
+        "DISTRO_BASE" = "${DISTRO_BASE}"
+        "DISTRO_BASE_SHORT" = "${DISTRO_BASE_SHORT}"
+        "DISTRO_VERSION" = "${DISTRO_VERSION}"
+        "PREFIX" = "${PREFIX}"
     }
 }
 
