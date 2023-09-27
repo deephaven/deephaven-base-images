@@ -17,8 +17,9 @@ ARG BUILD_TYPE=Release
 RUN set -eux; \
     [ "${DISTRO_BASE_SHORT}" = "ubuntu" ] || [ "${DISTRO_BASE_SHORT}" == "debian" ] || exit 0; \
     apt-get -qq update; \
-    apt-get -qq -y --no-install-recommends install \
+    TZ=Etc/UTC apt-get -qq -y --no-install-recommends install \
         locales \
+        tzdata \
         ca-certificates \
         curl \
         git \
