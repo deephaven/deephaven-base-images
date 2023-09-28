@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1.4
+
 ARG DISTRO_BASE=ubuntu
 ARG DISTRO_VERSION=22.04
 FROM $DISTRO_BASE:$DISTRO_VERSION
