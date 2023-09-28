@@ -12,7 +12,13 @@ Produced (only) for platform amd64.
 
 ### cpp-client-base
 
-Based on `debian:bullseye`, installs libraries needed to build the Deephaven cpp client.
+Based on `ubuntu:22.04`, installs libraries needed to build the Deephaven C++ client.
+
+Produced (only) for platform amd64.
+
+### r-client-base
+
+Based on `cpp-client-base:latest`, installs R and the packages needed to build the Deephaven R client.
 
 Produced (only) for platform amd64.
 
