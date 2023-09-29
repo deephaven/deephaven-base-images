@@ -2,6 +2,7 @@ group "default" {
     targets = [
         "protoc-base",
         "cpp-client-base",
+        "r-client-base",
     ]
 }
 
@@ -9,6 +10,7 @@ group "release" {
     targets = [
         "protoc-base-release",
         "cpp-client-base-release",
+        "r-client-base-release",
     ]
 }
 
@@ -25,7 +27,7 @@ variable "TAG" {
 }
 
 #
-# BEGIN cpp-client specific variables
+# cpp-client and r-client variables
 #
 
 # Passed to cmake as CMAKE_BUILD_TYPE
@@ -64,10 +66,6 @@ variable "PREFIX" {
     default = "/opt/deephaven"
 }
 
-#
-# END cpp-client specific variables.
-#
-
 target "protoc-base" {
     context = "proto/"
     contexts = {
@@ -89,6 +87,17 @@ target "cpp-client-base" {
     }
 }
 
+target "r-client-base" {
+    context = "r-client/"
+    tags = [ "${REPO_PREFIX}r-client-base:${TAG}" ]
+    args = {
+        "IMAGE_BASE" = "${REPO_PREFIX}cpp-client-base"
+        "IMAGE_TAG" = "${TAG}"
+        "DISTRO_BASE_SHORT" = "${DISTRO_BASE_SHORT}"
+        "PREFIX" = "${PREFIX}"
+    }
+}
+
 target "protoc-base-release" {
     inherits = [ "protoc-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}protoc-base" ]
@@ -100,5 +109,12 @@ target "cpp-client-base-release" {
     inherits = [ "cpp-client-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}cpp-client-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}cpp-client-base" ]
+    platforms = [ "linux/amd64" ]
+}
+
+target "r-client-base-release" {
+    inherits = [ "r-client-base" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}r-client-base" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}r-client-base" ]
     platforms = [ "linux/amd64" ]
 }
