@@ -86,7 +86,7 @@ RUN set -eux; \
 RUN set -eux; \
     [ "${DISTRO_BASE_SHORT}" = "ubuntu" ] || exit 0; \
     . "${PREFIX}/env.sh"; \
-    echo 'install.packages(c("Rcpp", "arrow", "R6", "dplyr"), quiet=TRUE)' | \
+    echo 'install.packages(c("Rcpp", "arrow", "R6", "dplyr", "testthat"), quiet=TRUE)' | \
       MAKEFLAGS="-j${NCPUS}" R --no-save
 
 #
@@ -95,5 +95,5 @@ RUN set -eux; \
 RUN set -eux; \
     [ "${DISTRO_BASE_SHORT}" = "fedora" ] || [ "${DISTRO_BASE_SHORT}" = "ubi" ] || exit 0; \
     . "${PREFIX}/env.sh"; \
-    echo 'install.packages(c("Rcpp", "arrow", "R6", "dplyr"), repos="http://cran.us.r-project.org", quiet=TRUE)' | \
+    echo 'install.packages(c("Rcpp", "arrow", "R6", "dplyr", "testthat"), repos="http://cran.us.r-project.org", quiet=TRUE)' | \
       MAKEFLAGS="-j${NCPUS}" R --no-save
