@@ -89,4 +89,4 @@ RUN set -eux; \
     [ "${DISTRO_BASE_SHORT}" = "fedora" ] || [ "${DISTRO_BASE_SHORT}" = "ubi" ] || exit 0; \
     . "${PREFIX}/env.sh"; \
     echo 'install.packages(c("Rcpp", "arrow", "R6", "dplyr", "testthat", "xml2", "lubridate", "zoo"), repos="http://cran.us.r-project.org", quiet=TRUE)' | \
-      MAKEFLAGS="-j${NCPUS}" R --no-save
+      MAKE="make -j${NCPUS}" R --no-save
