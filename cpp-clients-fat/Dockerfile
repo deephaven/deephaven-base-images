@@ -33,7 +33,7 @@ RUN set -eux; \
     $DNF clean all
 
 #
-# Python pip3 installs
+# Python pip installs
 #
 RUN set -eux; \
     python3 -m pip install --upgrade pip; \
