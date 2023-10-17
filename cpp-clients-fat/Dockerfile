@@ -15,7 +15,8 @@ RUN set -eux; \
     apt-get -qq update; \
     apt-get -qq -y --no-install-recommends install \
         python3.10-dev \
-        python3.10-venv; \
+        python3.10-venv \
+        python3-pip; \
     rm -fr /var/lib/apt/lists/*
 
 #
