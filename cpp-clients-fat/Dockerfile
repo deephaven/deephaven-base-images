@@ -8,6 +8,38 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ARG PREFIX=/opt/deephaven
 
 #
+# Ubuntu base python install.
+#
+RUN set -eux; \
+    [ "${DISTRO_BASE_SHORT}" = "ubuntu" ] || exit 0; \
+    apt-get -qq update; \
+    apt-get -qq -y --no-install-recommends install \
+        python-3.10-dev \
+        python-3.10-venv; \
+    rm -fr /var/lib/apt/lists/*
+
+#
+# Fedora and RHEL base python install.
+#
+RUN set -eux; \
+    [ "${DISTRO_BASE_SHORT}" = "fedora" ] || \
+      [ "${DISTRO_BASE_SHORT}" = "ubi" ] || \
+      exit 0; \
+    DNF=`type microdnf >/dev/null 2>&1 && echo 'microdnf --disableplugin=subscription-manager' || echo 'dnf -q'`; \
+    $DNF -y update; \
+    $DNF -y install \
+        python3.10-devel \
+        python3-pip; \
+    $DNF clean all
+
+#
+# Python pip3 installs
+#
+RUN set -eux; \
+    python3 -m pip install --upgrade pip; \
+    python3 -m pip install cython
+
+#
 # Ubuntu base R install.
 #
 RUN set -eux; \
