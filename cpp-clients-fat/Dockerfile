@@ -14,8 +14,8 @@ RUN set -eux; \
     [ "${DISTRO_BASE_SHORT}" = "ubuntu" ] || exit 0; \
     apt-get -qq update; \
     apt-get -qq -y --no-install-recommends install \
-        python-3.10-dev \
-        python-3.10-venv; \
+        python3.10-dev \
+        python3.10-venv; \
     rm -fr /var/lib/apt/lists/*
 
 #
