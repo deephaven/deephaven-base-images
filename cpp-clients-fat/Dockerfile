@@ -38,6 +38,7 @@ RUN set -eux; \
 #
 RUN set -eux; \
     python3 -m pip install --upgrade pip; \
+    python3 -m pip install unittest-xml-reporting; \
     python3 -m pip install cython
 
 #
