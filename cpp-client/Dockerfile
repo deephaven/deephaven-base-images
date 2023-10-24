@@ -73,3 +73,6 @@ RUN --mount=type=bind,source=build-dependencies.sh,target=/build-dependencies.sh
     rm -fr src/*/build_dir src/*/cmake/build_dir; \
     [ "${BUILD_TYPE}" = "Release" ] || dwz "${PREFIX}/lib"/lib*.so; \
     [ "${BUILD_TYPE}" != "Release" ] || rm -fr "${PREFIX}/src"
+
+ENV DH_PREFIX=$PREFIX
+ENV LD_LIBRARY_PATH=$PREFIX/lib

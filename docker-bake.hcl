@@ -2,7 +2,7 @@ group "default" {
     targets = [
         "protoc-base",
         "cpp-client-base",
-        "cpp-clients-fat-base",
+        "cpp-clients-multi-base",
     ]
 }
 
@@ -10,7 +10,7 @@ group "release" {
     targets = [
         "protoc-base-release",
         "cpp-client-base-release",
-        "cpp-clients-fat-base-release",
+        "cpp-clients-multi-base-release",
     ]
 }
 
@@ -27,7 +27,7 @@ variable "TAG" {
 }
 
 #
-# cpp-client and cpp-clients-fat variables
+# cpp-client and cpp-clients-multi variables
 #
 
 # Passed to cmake as CMAKE_BUILD_TYPE
@@ -87,9 +87,9 @@ target "cpp-client-base" {
     }
 }
 
-target "cpp-clients-fat-base" {
-    context = "cpp-clients-fat/"
-    tags = [ "${REPO_PREFIX}cpp-clients-fat-base:${TAG}" ]
+target "cpp-clients-multi-base" {
+    context = "cpp-clients-multi/"
+    tags = [ "${REPO_PREFIX}cpp-clients-multi-base:${TAG}" ]
     args = {
         "IMAGE_BASE" = "${REPO_PREFIX}cpp-client-base"
         "IMAGE_TAG" = "${TAG}"
@@ -112,9 +112,9 @@ target "cpp-client-base-release" {
     platforms = [ "linux/amd64" ]
 }
 
-target "cpp-clients-fat-base-release" {
-    inherits = [ "cpp-clients-fat-base" ]
-    cache-from = [ "type=gha,scope=${CACHE_PREFIX}cpp-clients-fat-base" ]
-    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}cpp-clients-fat-base" ]
+target "cpp-clients-multi-base-release" {
+    inherits = [ "cpp-clients-multi-base" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}cpp-clients-multi-base" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}cpp-clients-multi-base" ]
     platforms = [ "linux/amd64" ]
 }
