@@ -760,7 +760,7 @@ if [ "$CLONE_ARROW" = "yes" ]; then
   echo "*** Cloning arrow"
   cd $SRC
   # Previously used version: apache-arrow-7.0.0
-  git clone $GIT_FLAGS -b apache-arrow-7.0.0 --depth 1 https://github.com/apache/arrow
+  git clone $GIT_FLAGS -b apache-arrow-13.0.0 --depth 1 https://github.com/apache/arrow
   echo "*** Cloning arrow DONE"
 fi
 if [ "$BUILD_ARROW" = "yes" ]; then
