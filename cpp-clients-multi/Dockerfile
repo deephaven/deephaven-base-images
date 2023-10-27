@@ -1,8 +1,6 @@
 # syntax=docker/dockerfile:1.4
 
-ARG IMAGE_BASE=ghcr.io/deephaven/cpp-client-base
-ARG IMAGE_TAG=latest
-FROM ${IMAGE_BASE}:${IMAGE_TAG}
+FROM cpp-client-base
 ARG DISTRO_BASE_SHORT=ubuntu
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG PREFIX=/opt/deephaven

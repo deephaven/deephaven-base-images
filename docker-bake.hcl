@@ -89,10 +89,11 @@ target "cpp-client-base" {
 
 target "cpp-clients-multi-base" {
     context = "cpp-clients-multi/"
+    contexts = {
+        cpp-client-base = "target:cpp-client-base"
+    }
     tags = [ "${REPO_PREFIX}cpp-clients-multi-base:${TAG}" ]
     args = {
-        "IMAGE_BASE" = "${REPO_PREFIX}cpp-client-base"
-        "IMAGE_TAG" = "${TAG}"
         "DISTRO_BASE_SHORT" = "${DISTRO_BASE_SHORT}"
         "PREFIX" = "${PREFIX}"
     }
