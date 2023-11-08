@@ -49,18 +49,21 @@ function usage {
     echo "  and create the env file.\""
     echo
     echo "  Options:"
-    echo "    --clean        Remove the downloaded sources once a library is built."
-    echo "                   This is necessary for re-clonning."
-    echo "    --shared       Build shared libraries.  This is the default if not specified."
-    echo "    --static-pic   Build static libraries from object files compiled with -fPIC"
-    echo "                   (position independent code).  This is useful for creating"
-    echo "                   self-contained bundled libraries that contain all the dependencies"
-    echo "                   (eg, deephaven.so).  This can be used to produce python and R clients"
-    echo "                   that do not depend on the dynamic libraries somewhere else in the filesystem."
-    echo "                   In the past this was the default (now the default is --shared)."
-    echo "    --multilocal   Install each library in its own subdirectory under 'local'.  This used to be the default."
-    echo "    --help|-h      Show this usage message and exit."
-    echo 
+    echo "    --clean          Remove the downloaded sources once a library is built."
+    echo "                     This is necessary for re-clonning."
+    echo "    --shared         Build shared libraries.  This is the default if not specified."
+    echo "    --static-pic     Build static libraries from object files compiled with -fPIC"
+    echo "                     (position independent code).  This is useful for creating"
+    echo "                     self-contained bundled libraries that contain all the dependencies"
+    echo "                     (eg, deephaven.so).  This can be used to produce python and R clients"
+    echo "                     that do not depend on the dynamic libraries somewhere else in the filesystem."
+    echo "                     In the past this was the default (now the default is --shared)."
+    echo "    --multilocal     Install each library in its own subdirectory under 'local'.  This used to be the default."
+    echo "    --help|-h        Show this usage message and exit."
+    echo
+    echo "  Environment variables:"
+    echo "    GITHUB_BASE_URL  If defined, this will replace the default of 'https://github.com' for git operations."
+    echo
     echo "  If no actions are requested, this results in performing all default actions."
     echo "  When no individual actions are requested, an environment variable of similar"
     echo "  name to the corresponding option (eg, CLONE_PROTOBUF) can be defined"
@@ -190,6 +193,8 @@ while [ "$#" -ge 1 ]; do
     fi
     break
 done
+
+: ${GITHUB_BASE_URL:="https://github.com"}
 
 if [ "$#" -eq 0 ]; then
     : ${CLONE_PROTOBUF:=yes}
@@ -398,14 +403,6 @@ set -x
 # Set to where you intend the sources for and installed depdenencies to live.
 : ${DHDEPS_HOME:=$(pwd)}
 
-# At the point of this writing, the latest immer release is pretty old.
-# We want something a lot more recent, but don't want to track head as is a moving
-# target and we can't guarantee things will continue to compile/be consistent.
-# So we select a particular SHA.
-# Previously used version:
-# : ${IMMER_SHA:=e5d79ed80ec74d511cc4f52fb68feeac66507f2c}
-: ${IMMER_SHA:=0b3aaf699b9d6f2e89f8e2b6d1221c307e02bda3}
-
 #
 # End of user customization section; you should not need to modify the code below
 # unless you need to do partial re-builds.
@@ -494,7 +491,7 @@ if [ "$CLONE_ABSEIL" = "yes" ]; then
   echo "*** Clone abseil"
   cd $SRC
   # Previously used version: 20210324.2
-  git clone $GIT_FLAGS -b 20211102.0 --depth 1 https://github.com/abseil/abseil-cpp.git
+  git clone $GIT_FLAGS -b 20211102.0 --depth 1 "${GITHUB_BASE_URL}/abseil/abseil-cpp.git"
   echo "*** Cloning abseil DONE"
   if [ "$fedora38" = "yes" ]; then
   echo "*** Patching abseil for Fedora 38"
@@ -534,7 +531,7 @@ if [ "$CLONE_ZLIB" = "yes" ]; then
   echo "*** Clone zlib"
   cd $SRC
   # Previously used version: v1.2.11
-  git clone $GIT_FLAGS -b v1.2.13 --depth 1 https://github.com/madler/zlib
+  git clone $GIT_FLAGS -b v1.2.13 --depth 1 "${GITHUB_BASE_URL}/madler/zlib"
   echo "*** Cloning zlib DONE"
 fi
 if [ "$BUILD_ZLIB" = "yes" ]; then
@@ -565,7 +562,7 @@ if [ "$CLONE_PROTOBUF" = "yes" ]; then
   echo "*** Cloning protobuf"
   cd $SRC
   # Previously used version: v3.20.1
-  git clone $GIT_FLAGS -b v3.20.1 --depth 1 https://github.com/protocolbuffers/protobuf.git
+  git clone $GIT_FLAGS -b v3.20.1 --depth 1 "${GITHUB_BASE_URL}/protocolbuffers/protobuf.git"
   echo "*** Cloning protobuf DONE"
 fi
 if [ "$BUILD_PROTOBUF" = "yes" ]; then
@@ -594,7 +591,7 @@ if [ "$CLONE_RE2" = "yes" ]; then
   echo "*** Cloning re2"
   cd $SRC
   # Previously used version: 2022-04-01
-  git clone $GIT_FLAGS -b 2022-06-01 --depth 1 https://github.com/google/re2.git
+  git clone $GIT_FLAGS -b 2022-06-01 --depth 1 "${GITHUB_BASE_URL}/google/re2.git"
   echo "*** Cloning re2 DONE"
 fi
 if [ "$BUILD_RE2" = "yes" ]; then
@@ -619,7 +616,7 @@ if [ "$CLONE_GFLAGS" = "yes" ]; then
   echo
   echo "*** Cloning gflags"
   cd $SRC
-  git clone $GIT_FLAGS -b v2.2.2 --depth 1 https://github.com/gflags/gflags.git
+  git clone $GIT_FLAGS -b v2.2.2 --depth 1 "${GITHUB_BASE_URL}/gflags/gflags.git"
   echo "*** Cloning gflags DONE"
 fi
 if [ "$BUILD_GFLAGS" = "yes" ]; then
@@ -666,7 +663,7 @@ if [ "$CLONE_FLATBUFFERS" = "yes" ]; then
   echo "*** Clone flatbuffers"
   cd $SRC
   # Previously used version: v2.0.6
-  git clone $GIT_FLAGS -b v23.5.26 --depth 1 https://github.com/google/flatbuffers.git
+  git clone $GIT_FLAGS -b v23.5.26 --depth 1 "${GITHUB_BASE_URL}/google/flatbuffers.git"
   echo "*** Cloning flatbuffers DONE"
 fi
 if [ "$BUILD_FLATBUFFERS" = "yes" ]; then
@@ -692,7 +689,7 @@ if [ "$CLONE_CARES" = "yes" ]; then
   echo "*** Clone ares"
   cd $SRC
   # Previously used version: cares-1_18_1
-  git clone $GIT_FLAGS -b cares-1_18_1 --depth 1 https://github.com/c-ares/c-ares.git
+  git clone $GIT_FLAGS -b cares-1_18_1 --depth 1 "${GITHUB_BASE_URL}/c-ares/c-ares.git"
   echo "*** Cloning ares DONE"
 fi
 if [ "$BUILD_CARES" = "yes" ]; then
@@ -725,7 +722,7 @@ if [ "$CLONE_GRPC" = "yes" ]; then
   echo "*** Clone grpc"
   cd $SRC
   # Previously used version: v1.45.2
-  git clone $GIT_FLAGS -b v1.46.7 --depth 1 https://github.com/grpc/grpc
+  git clone $GIT_FLAGS -b v1.46.7 --depth 1 "${GITHUB_BASE_URL}/grpc/grpc"
   echo "*** Cloning grpc DONE"
 fi
 if [ "$BUILD_GRPC" = "yes" ]; then
@@ -760,7 +757,7 @@ if [ "$CLONE_ARROW" = "yes" ]; then
   echo "*** Cloning arrow"
   cd $SRC
   # Previously used version: apache-arrow-7.0.0
-  git clone $GIT_FLAGS -b apache-arrow-13.0.0 --depth 1 https://github.com/apache/arrow
+  git clone $GIT_FLAGS -b apache-arrow-13.0.0 --depth 1 "${GITHUB_BASE_URL}/apache/arrow"
   echo "*** Cloning arrow DONE"
 fi
 if [ "$BUILD_ARROW" = "yes" ]; then
@@ -809,7 +806,8 @@ if [ "$CLONE_IMMER" = "yes" ]; then
   echo
   echo "*** Clone immer"
   cd $SRC
-  git clone $GIT_FLAGS https://github.com/arximboldi/immer.git && (cd immer && git checkout "${IMMER_SHA}")
+  # Previously used version: SHA e5d79ed80ec74d511cc4f52fb68feeac66507f2c.
+  git clone $GIT_FLAGS -b v0.8.1 "${GITHUB_BASE_URL}/arximboldi/immer.git"
   echo "*** Clonning immer DONE"
 fi
 if [ "$BUILD_IMMER" = "yes" ]; then
