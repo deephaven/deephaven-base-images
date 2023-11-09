@@ -8,12 +8,10 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ARG PROTOC_GEN_GO_VERSION=v1.28
 ARG PROTOC_GEN_GO_GRPC_VERSION=v1.2
 
-ENV GOPATH=/opt/protoc-gen-go
+ENV GOPATH=/opt/go
 
 RUN set -eux; \
     mkdir -p ${GOPATH}; \
-    mkdir /opt/cpp; \
-    ln /opt/deephaven/bin/grpc_cpp_plugin /opt/cpp/grpc_cpp_plugin; \
     apt-get -qq update; \
     apt-get -qq -y --no-install-recommends install \
       golang \

@@ -32,8 +32,10 @@ sha256sum --check "${__dir}/checksums.txt"
 unzip protoc-3.20.3-linux-x86_64.zip -d /opt/protoc
 rm protoc-3.20.3-linux-x86_64.zip
 
-mv protoc-gen-grpc-java-1.50.2-linux-x86_64.exe /opt/protoc-gen-grpc-java
-chmod +x /opt/protoc-gen-grpc-java
+mkdir -p /opt/java/bin
+
+mv protoc-gen-grpc-java-1.50.2-linux-x86_64.exe /opt/java/bin/protoc-gen-grpc-java
+chmod +x /opt/java/bin/protoc-gen-grpc-java
 
 mkdir -p /usr/src/app
 cp "${__dir}/package.json" /usr/src/app
