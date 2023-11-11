@@ -53,7 +53,7 @@ RUN set -eux; \
     echo "deb [signed-by=/usr/share/keyrings/r-project.gpg] https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" | \
        tee -a /etc/apt/sources.list.d/r-project.list; \
     apt-get -qq update; \
-    apt-get -qq -y install r-base r-recommended libxml2-dev; \
+    apt-get -qq -y install r-base r-recommended libxml2-dev pandoc; \
     rm -fr /var/lib/apt/lists/*
 
 #
@@ -62,7 +62,7 @@ RUN set -eux; \
 RUN set -eux; \
     [ "${DISTRO_BASE_SHORT}" = "fedora" ] || exit 0; \
     dnf -q -y update; \
-    dnf -q -y install R libxml2-devel; \
+    dnf -q -y install R libxml2-devel pandoc; \
     dnf clean all
 
 #
@@ -85,6 +85,7 @@ RUN set -eux; \
       which \
       redhat-rpm-config \
       libxml2-devel \
+      pandoc \
       ; \
     $DNF clean all; \
     rpm -Uvh "${URL_BASE}/t/tre-common-0.8.0-27.20140228gitc2f5d13.el8.noarch.rpm"; \
