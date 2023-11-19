@@ -50,7 +50,7 @@ function usage {
     echo
     echo "  Options:"
     echo "    --clean          Remove the downloaded sources once a library is built."
-    echo "                     This is necessary for re-clonning."
+    echo "                     This is necessary for re-cloning."
     echo "    --shared         Build shared libraries.  This is the default if not specified."
     echo "    --static-pic     Build static libraries from object files compiled with -fPIC"
     echo "                     (position independent code).  This is useful for creating"
@@ -562,7 +562,7 @@ if [ "$CLONE_PROTOBUF" = "yes" ]; then
   echo "*** Cloning protobuf"
   cd $SRC
   # Previously used version: v3.20.1
-  git clone $GIT_FLAGS -b v3.20.1 --depth 1 "${GITHUB_BASE_URL}/protocolbuffers/protobuf.git"
+  git clone $GIT_FLAGS -b v3.21.12 --depth 1 "${GITHUB_BASE_URL}/protocolbuffers/protobuf.git"
   echo "*** Cloning protobuf DONE"
 fi
 if [ "$BUILD_PROTOBUF" = "yes" ]; then
