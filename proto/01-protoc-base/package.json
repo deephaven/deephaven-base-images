@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "google-protobuf": "~3.20.1",
+    "google-protobuf": "~3.21.2",
     "ts-protoc-gen": "^0.15.0"
   },
   "engines": {
