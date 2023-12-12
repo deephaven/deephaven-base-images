@@ -25,17 +25,23 @@ python3 -m pip list
 
 # Note: should not update past 3.20.x until https://github.com/protocolbuffers/protobuf-javascript/issues/127 is fixed
 
-wget -q "https://github.com/protocolbuffers/protobuf/releases/download/v3.20.3/protoc-3.20.3-linux-x86_64.zip"
+wget -q "https://github.com/protocolbuffers/protobuf/releases/download/v21.2/protoc-21.2-linux-x86_64.zip"
 wget -q "https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.50.2/protoc-gen-grpc-java-1.50.2-linux-x86_64.exe"
+wget -q "https://github.com/protocolbuffers/protobuf-javascript/releases/download/v3.21.2/protobuf-javascript-3.21.2-linux-x86_64.zip"
 sha256sum --check "${__dir}/checksums.txt"
 
-unzip protoc-3.20.3-linux-x86_64.zip -d /opt/protoc
-rm protoc-3.20.3-linux-x86_64.zip
+unzip protoc-21.2-linux-x86_64.zip -d /opt/protoc
+rm protoc-21.2-linux-x86_64.zip
 
 mkdir -p /opt/java/bin
 
 mv protoc-gen-grpc-java-1.50.2-linux-x86_64.exe /opt/java/bin/protoc-gen-grpc-java
 chmod +x /opt/java/bin/protoc-gen-grpc-java
+
+unzip protobuf-javascript-3.21.2-linux-x86_64.zip -d jsplugin_temp
+# move somewhere else that is still on the PATH or otherwise findable by protoc
+mv jsplugin_temp/bin/protoc-gen-js /opt/java/bin
+rm -r protobuf-javascript-3.21.2-linux-x86_64.zip jsplugin_temp
 
 mkdir -p /usr/src/app
 cp "${__dir}/package.json" /usr/src/app
