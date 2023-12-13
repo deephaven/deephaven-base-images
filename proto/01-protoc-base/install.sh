@@ -38,7 +38,7 @@ chmod +x /opt/java/bin/protoc-gen-grpc-java
 
 unzip protobuf-javascript-3.21.2-linux-x86_64.zip -d jsplugin_temp
 # move somewhere that is guaranteed to be on the PATH so protoc can find it
-mv jsplugin_temp/bin/protoc-gen-js /usr/local/bin/
+mv jsplugin_temp/bin/protoc-gen-js /usr/local/bin/cantseeme-hello
 rm -r protobuf-javascript-3.21.2-linux-x86_64.zip jsplugin_temp
 
 mkdir -p /usr/src/app
