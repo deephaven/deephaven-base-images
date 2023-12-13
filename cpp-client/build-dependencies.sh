@@ -561,8 +561,8 @@ if [ "$CLONE_PROTOBUF" = "yes" ]; then
   echo
   echo "*** Cloning protobuf"
   cd $SRC
-  # Previously used version: v3.20.1
-  git clone $GIT_FLAGS -b v3.21.12 --depth 1 "${GITHUB_BASE_URL}/protocolbuffers/protobuf.git"
+  # Previously used version: v3.21.12
+  git clone $GIT_FLAGS -b v3.21.2 --depth 1 "${GITHUB_BASE_URL}/protocolbuffers/protobuf.git"
   echo "*** Cloning protobuf DONE"
 fi
 if [ "$BUILD_PROTOBUF" = "yes" ]; then
