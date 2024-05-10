@@ -23,13 +23,13 @@ python3 -m pip install -q --no-cache-dir --upgrade setuptools
 python3 -m pip install -q --no-cache-dir -r "${__dir}/requirements.txt"
 python3 -m pip list
 
-wget -q "https://github.com/protocolbuffers/protobuf/releases/download/v21.2/protoc-21.2-linux-x86_64.zip"
+wget -q "https://github.com/protocolbuffers/protobuf/releases/download/v26.1/protoc-26.1-linux-x86_64.zip"
 wget -q "https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.50.2/protoc-gen-grpc-java-1.50.2-linux-x86_64.exe"
 wget -q "https://github.com/protocolbuffers/protobuf-javascript/releases/download/v3.21.2/protobuf-javascript-3.21.2-linux-x86_64.zip"
 sha256sum --check "${__dir}/checksums.txt"
 
-unzip protoc-21.2-linux-x86_64.zip -d /opt/protoc
-rm protoc-21.2-linux-x86_64.zip
+unzip protoc-26.1-linux-x86_64.zip -d /opt/protoc
+rm protoc-26.1-linux-x86_64.zip
 
 mkdir -p /opt/java/bin
 
