@@ -1,1 +1,1 @@
-grpcio-tools==1.63.1
+grpcio-tools==1.63.0
