@@ -2,7 +2,7 @@
 
 # -------------------------------------
 
-FROM --platform=linux/amd64 cpp-client-base as protoc-base
+FROM cpp-client-base as protoc-base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG PROTOC_GEN_GO_VERSION=v1.28
