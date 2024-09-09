@@ -2,7 +2,7 @@
 
 # -------------------------------------
 
-FROM cpp-client-base as protoc-base
+FROM --platform=linux/amd64 cpp-client-base as protoc-base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG PROTOC_GEN_GO_VERSION=v1.28
@@ -11,6 +11,7 @@ ARG PROTOC_GEN_DOC_VERSION=v1.5.1
 ARG PROTOC_VERSION=3.17.3
 
 ENV GOPATH=/opt/go
+ENV PATH=$GOPATH/bin:$PATH
 
 RUN set -eux; \
     mkdir -p ${GOPATH}; \
