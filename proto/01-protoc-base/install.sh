@@ -33,9 +33,18 @@ js_ver=3.21.2
 wget -q "https://github.com/protocolbuffers/protobuf-javascript/releases/download/v${js_ver}/protobuf-javascript-${js_ver}-linux-x86_64.zip"
 sha256sum --check "${__dir}/checksums.txt"
 
+doc_plugin_ver=1.5.1
+wget -q "https://github.com/pseudomuto/protoc-gen-doc/releases/download/v${doc_plugin_ver}/protoc-gen-doc_${doc_plugin_ver}_linux_amd64.tar.gz"
+
 pbuf_zip=protoc-${pbuf_ver}-linux-x86_64.zip
 unzip "$pbuf_zip" -d /opt/protoc
 rm "$pbuf_zip"
+
+tar -xzf "protoc-gen-doc_${doc_plugin_ver}_linux_amd64.tar.gz" -C /usr/local/bin
+rm "protoc-gen-doc_${doc_plugin_ver}_linux_amd64.tar.gz"
+
+# move protoc to PATH so it can be used in doc generation
+mv /opt/protoc/bin/protoc /usr/local/bin/
 
 mkdir -p /opt/java/bin
 
