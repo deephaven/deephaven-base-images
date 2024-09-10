@@ -31,11 +31,18 @@ wget -q "https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/${java_plug
 
 js_ver=3.21.2
 wget -q "https://github.com/protocolbuffers/protobuf-javascript/releases/download/v${js_ver}/protobuf-javascript-${js_ver}-linux-x86_64.zip"
+
+doc_plugin_ver=1.5.1
+wget -q "https://github.com/pseudomuto/protoc-gen-doc/releases/download/v${doc_plugin_ver}/protoc-gen-doc_${doc_plugin_ver}_linux_amd64.tar.gz"
+
 sha256sum --check "${__dir}/checksums.txt"
 
 pbuf_zip=protoc-${pbuf_ver}-linux-x86_64.zip
 unzip "$pbuf_zip" -d /opt/protoc
 rm "$pbuf_zip"
+
+tar -xzf "protoc-gen-doc_${doc_plugin_ver}_linux_amd64.tar.gz" -C /usr/local/bin
+rm "protoc-gen-doc_${doc_plugin_ver}_linux_amd64.tar.gz"
 
 mkdir -p /opt/java/bin
 
