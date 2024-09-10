@@ -43,9 +43,6 @@ rm "$pbuf_zip"
 tar -xzf "protoc-gen-doc_${doc_plugin_ver}_linux_amd64.tar.gz" -C /usr/local/bin
 rm "protoc-gen-doc_${doc_plugin_ver}_linux_amd64.tar.gz"
 
-# move protoc to PATH so it can be used in doc generation
-mv /opt/protoc/bin/protoc /usr/local/bin/
-
 mkdir -p /opt/java/bin
 
 mv "protoc-gen-grpc-java-${java_plugin_ver}-linux-x86_64.exe" /opt/java/bin/protoc-gen-grpc-java
