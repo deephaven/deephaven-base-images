@@ -26,7 +26,7 @@ python3 -m pip list
 pbuf_ver=27.1
 wget -q "https://github.com/protocolbuffers/protobuf/releases/download/v${pbuf_ver}/protoc-${pbuf_ver}-linux-x86_64.zip"
 
-java_plugin_ver=1.65.1
+java_plugin_ver=1.66.0
 wget -q "https://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/${java_plugin_ver}/protoc-gen-grpc-java-${java_plugin_ver}-linux-x86_64.exe"
 
 js_ver=3.21.4
