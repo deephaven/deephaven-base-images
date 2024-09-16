@@ -1,4 +1,4 @@
-f853e691868d0557425ea290bf7ba6384eef2fa9b04c323afab49a770ba9da80  protoc-25.3-linux-x86_64.zip
-b0f50f6a857c3e17f7a83ce90d9f877640381100289fedc4658dc47d69bc7f36  protoc-gen-grpc-java-1.63.1-linux-x86_64.exe
-075ed6163fea314c415f67a4af68d1b6dbddc8fa8be35addf74e4c81812a9148  protobuf-javascript-3.21.2-linux-x86_64.zip
+4966d0dce71a637b3b46de511aefc52c5df449159c6acbd7967ba742944012fd  protobuf-javascript-3.21.4-linux-x86_64.zip
+58b1e2e45889187c22598bf5d9944d7c4f5f68407906f26cc4831911ae8ada53  protoc-28.1-linux-x86_64.zip
 47cd72b07e6dab3408d686a65d37d3a6ab616da7d8b564b2bd2a2963a72b72fd  protoc-gen-doc_1.5.1_linux_amd64.tar.gz
+654626545f36b0cda5179e4b46c7bde2a8eefee8d265d346967c8542537137a8  protoc-gen-grpc-java-1.66.0-linux-x86_64.exe
