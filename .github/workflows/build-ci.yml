@@ -33,7 +33,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Bake (release)
-        uses: docker/bake-action@v6.4.0
+        uses: docker/bake-action@v6.6.0
         with:
           targets: release
           pull: true
