@@ -93,7 +93,7 @@ ARG FLATBUFFERS_ARCHIVE_BASE_URL="https://api.github.com/repos/google/flatbuffer
 ARG FLATBUFFERS_ARCHIVE_TAG="master"
 ARG FLATBUFFERS_BUILD_TYPE="Release"
 
-LABEL maintainer="Evan Wies <evan@neomantra.net>"
+LABEL maintainer="Charles Wright <charleswright@deephaven.io>"
 LABEL FLATBUFFERS_IMAGE_BASE="${FLATBUFFERS_IMAGE_BASE}"
 LABEL FLATBUFFERS_IMAGE_TAG="${FLATBUFFERS_IMAGE_TAG}"
 LABEL FLATBUFFERS_USE_CLANG="${FLATBUFFERS_USE_CLANG}"
