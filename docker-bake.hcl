@@ -77,11 +77,15 @@ target "protoc-base" {
     target = "protoc-base"
 }
 
+variable "FLATBUF_VERSION" {
+    default = "v24.3.25"
+}
+
 target "flatbuffers-base" {
     context = "flatbuffers/"
-    tags = [ "${REPO_PREFIX}flatbuffers-base:${TAG}" ]
+    tags = [ "${REPO_PREFIX}flatbuffers-base:${FLATBUF_VERSION}-${TAG}" ]
     args = {
-        "FLATBUFFERS_ARCHIVE_TAG" = "v24.3.25"
+        "FLATBUFFERS_ARCHIVE_TAG" = "${FLATBUF_VERSION}"
     }
 }
 
