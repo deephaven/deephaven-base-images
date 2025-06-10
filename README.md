@@ -24,7 +24,7 @@ Produced (only) for platform amd64.
 
 ### flatbuffers-base
 
-Forked from https://github.com/neomantra/docker-flatbuffers/blob/master/Dockerfile (MIT Licensed).  Installs flatbuffers compiler (flatc) for generating Python and Java flat buffer builders.
+Forked from https://github.com/neomantra/docker-flatbuffers/blob/master/Dockerfile (MIT Licensed).  Installs flatbuffers compiler (flatc) for generating Python and Java flat buffer builders.  flatcc is not included.
 
 Produced (only) for platform amd64.
 

@@ -75,37 +75,6 @@ RUN curl -fSL "${FLATBUFFERS_ARCHIVE_BASE_URL}/${FLATBUFFERS_ARCHIVE_TAG}" -o fl
 
 
 ###############################################################################
-# flatcc Build
-###############################################################################
-
-# Same build environment as FlatBuffer
-
-ARG FLATCC_ARCHIVE_BASE_URL="https://api.github.com/repos/dvidelabs/flatcc/tarball"
-ARG FLATCC_ARCHIVE_TAG="master"
-
-RUN curl -fSL "${FLATCC_ARCHIVE_BASE_URL}/${FLATCC_ARCHIVE_TAG}" -o flatcc.tar.gz \
-    && tar xzf flatcc.tar.gz \
-    && mv dvidelabs-flatcc-* flatcc \
-    && cd flatcc \
-    && env $( if [ "${FLATBUFFERS_USE_CLANG}" = "true" ] ; then echo "CC=/usr/bin/clang CXX=/usr/bin/clang++ " ; fi) \
-        ./scripts/initbuild.sh make \
-    && env $( if [ "${FLATBUFFERS_USE_CLANG}" = "true" ] ; then echo "CC=/usr/bin/clang CXX=/usr/bin/clang++ " ; fi) \
-       ./scripts/build.sh
-
-
-# Build artifacts:
-# Compiler:
-#   bin/flatcc                 (command line interface to schema compiler)
-#   lib/libflatcc.a            (optional, for linking with schema compiler)
-#   include/flatcc/flatcc.h    (optional, header and doc for libflatcc.a)
-# Runtime:
-#   include/flatcc/**          (runtime header files)
-#   include/flatcc/reflection  (optional)
-#   include/flatcc/support     (optional, only used for test and samples)
-#   lib/libflatccrt.a          (runtime library)
-
-
-###############################################################################
 # Final Image Composition
 ###############################################################################
 
@@ -119,16 +88,10 @@ COPY --from=flatbuffer_build /usr/local/include/flatbuffers /usr/local/include/f
 COPY --from=flatbuffer_build /usr/local/lib/libflatbuffers.a /usr/local/lib/libflatbuffers.a
 COPY --from=flatbuffer_build /usr/local/lib/cmake/flatbuffers /usr/local/lib/cmake/flatbuffers
 
-COPY --from=flatbuffer_build /flatcc/bin/flatcc /usr/local/bin/flatcc
-COPY --from=flatbuffer_build /flatcc/include/flatcc /usr/local/include/flatcc
-COPY --from=flatbuffer_build /flatcc/lib/*.a /usr/local/lib/
-
 ARG FLATBUFFERS_USE_CLANG="false"
 ARG FLATBUFFERS_ARCHIVE_BASE_URL="https://api.github.com/repos/google/flatbuffers/tarball"
 ARG FLATBUFFERS_ARCHIVE_TAG="master"
 ARG FLATBUFFERS_BUILD_TYPE="Release"
-ARG FLATCC_ARCHIVE_BASE_URL="https://api.github.com/repos/dvidelabs/flatcc/tarball"
-ARG FLATCC_ARCHIVE_TAG="master"
 
 LABEL maintainer="Evan Wies <evan@neomantra.net>"
 LABEL FLATBUFFERS_IMAGE_BASE="${FLATBUFFERS_IMAGE_BASE}"
@@ -137,5 +100,3 @@ LABEL FLATBUFFERS_USE_CLANG="${FLATBUFFERS_USE_CLANG}"
 LABEL FLATBUFFERS_ARCHIVE_BASE_URL="${FLATBUFFERS_ARCHIVE_BASE_URL}"
 LABEL FLATBUFFERS_ARCHIVE_TAG="${FLATBUFFERS_ARCHIVE_TAG}"
 LABEL FLATBUFFERS_BUILD_TYPE="${FLATBUFFERS_BUILD_TYPE}"
-LABEL FLATCC_ARCHIVE_BASE_URL="${FLATCC_ARCHIVE_BASE_URL}"
-LABEL FLATCC_ARCHIVE_TAG="${FLATCC_ARCHIVE_TAG}"
