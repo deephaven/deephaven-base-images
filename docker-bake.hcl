@@ -3,6 +3,7 @@ group "default" {
         "protoc-base",
         "cpp-client-base",
         "cpp-clients-multi-base",
+        "flatbuffers-base",
     ]
 }
 
@@ -11,6 +12,7 @@ group "release" {
         "protoc-base-release",
         "cpp-client-base-release",
         "cpp-clients-multi-base-release",
+        "flatbuffers-base-release",
     ]
 }
 
@@ -75,6 +77,18 @@ target "protoc-base" {
     target = "protoc-base"
 }
 
+variable "FLATBUF_VERSION" {
+    default = "v24.3.25"
+}
+
+target "flatbuffers-base" {
+    context = "flatbuffers/"
+    tags = [ "${REPO_PREFIX}flatbuffers-base:${FLATBUF_VERSION}-${TAG}" ]
+    args = {
+        "FLATBUFFERS_ARCHIVE_TAG" = "${FLATBUF_VERSION}"
+    }
+}
+
 target "cpp-client-base" {
     context = "cpp-client/"
     tags = [ "${REPO_PREFIX}cpp-client-base:${TAG}" ]
@@ -103,6 +117,13 @@ target "protoc-base-release" {
     inherits = [ "protoc-base" ]
     cache-from = [ "type=gha,scope=${CACHE_PREFIX}protoc-base" ]
     cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}protoc-base" ]
+    platforms = [ "linux/amd64" ]
+}
+
+target "flatbuffers-base-release" {
+    inherits = [ "flatbuffers-base" ]
+    cache-from = [ "type=gha,scope=${CACHE_PREFIX}flatbuffers-base" ]
+    cache-to = [ "type=gha,mode=max,scope=${CACHE_PREFIX}flatbuffers-base" ]
     platforms = [ "linux/amd64" ]
 }
 
