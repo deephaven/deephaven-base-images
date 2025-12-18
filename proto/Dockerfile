@@ -2,7 +2,7 @@
 
 # -------------------------------------
 
-FROM cpp-client-base as protoc-base
+FROM cpp-client-base AS protoc-base
 
 ARG DEBIAN_FRONTEND="noninteractive"
 ARG PROTOC_GEN_GO_VERSION=v1.28
