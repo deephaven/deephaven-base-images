@@ -78,7 +78,7 @@ target "protoc-base" {
 }
 
 variable "FLATBUF_VERSION" {
-    default = "v24.3.25"
+    default = "v25.2.10"
 }
 
 target "flatbuffers-base" {
