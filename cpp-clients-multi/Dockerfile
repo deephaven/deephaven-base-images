@@ -47,7 +47,8 @@ RUN set -eux; \
     apt-get -qq update; \
     apt-get -qq -y --no-install-recommends install \
         wget \
-        gpg; \
+        gpg \
+        libuv1-dev; \
     wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | \
        gpg --dearmor -o /usr/share/keyrings/r-project.gpg; \
     echo "deb [signed-by=/usr/share/keyrings/r-project.gpg] https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" | \
@@ -62,7 +63,7 @@ RUN set -eux; \
 RUN set -eux; \
     [ "${DISTRO_BASE_SHORT}" = "fedora" ] || exit 0; \
     dnf -q -y update; \
-    dnf -q -y install R libxml2-devel pandoc; \
+    dnf -q -y install R libxml2-devel pandoc libuv-devel; \
     dnf clean all
 
 #
@@ -86,6 +87,7 @@ RUN set -eux; \
       redhat-rpm-config \
       libxml2-devel \
       pandoc \
+      libuv-devel \
       ; \
     $DNF clean all; \
     rpm -Uvh "${URL_BASE}/t/tre-common-0.8.0-27.20140228gitc2f5d13.el8.noarch.rpm"; \
@@ -121,5 +123,15 @@ RUN set -eux; \
 #
 RUN set -eux; \
     . "${PREFIX}/env.sh"; \
-    echo 'install.packages(c("Rcpp", "arrow", "R6", "dplyr", "testthat", "xml2", "lubridate", "zoo", "knitr", "rmarkdown"), repos="http://cran.us.r-project.org", quiet=TRUE)' | \
-      MAKE="make -j${NCPUS}" R --no-save
+    MAKE="make -j${NCPUS}" R --no-save --no-restore <<'EOF'
+status = tryCatch(
+  {
+     install.packages(c("Rcpp", "arrow", "R6", "dplyr", "testthat", "xml2", "lubridate", "zoo", "knitr", "rmarkdown"), repos="http://cran.us.r-project.org", quiet=TRUE)
+     0
+  },
+  error=function(e) 1,
+  warning=function(w) 2
+)
+print(paste0('status=', status))
+quit(save='no', status=status)
+EOF
