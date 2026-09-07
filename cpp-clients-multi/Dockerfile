@@ -126,7 +126,7 @@ RUN set -eux; \
     MAKE="make -j${NCPUS}" R --no-save --no-restore <<'EOF'
 status = tryCatch(
   {
-     install.packages(c("Rcpp", "arrow", "R6", "dplyr", "testthat", "xml2", "lubridate", "zoo", "knitr", "rmarkdown"), repos="http://cran.us.r-project.org", quiet=TRUE)
+     install.packages(c("Rcpp", "arrow", "R6", "dplyr", "testthat", "xml2", "lubridate", "zoo", "knitr", "rmarkdown"), repos="https://cloud.r-project.org", quiet=TRUE)
      0
   },
   error=function(e) 1,
